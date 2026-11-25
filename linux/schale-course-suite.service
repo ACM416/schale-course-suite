@@ -1,0 +1,16 @@
+[Unit]
+Description=S.C.H.A.L.E. Course Suite (UOOC + Zhihuishu + Chaoxing Multi-Account)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=__APP_DIR__
+ExecStart=__PY_BIN__ __APP_DIR__/server.py --host 0.0.0.0
+Restart=always
+RestartSec=5
+Environment=PYTHONUNBUFFERED=1
+Environment=SCHALE_DATA_DIR=__APP_DIR__/data
+
+[Install]
+WantedBy=multi-user.target

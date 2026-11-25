@@ -1,0 +1,17 @@
+services:
+  schale-course-suite:
+    build: .
+    container_name: schale-course-suite
+    restart: unless-stopped
+    ports:
+      - "51088:51088" # UOOC 优课在线 (圣园未花)
+      - "51089:51089" # 知道智慧树 (才羽绿 & 才羽桃井)
+      - "51092:51092" # 超星学习通多账号 (阿罗娜 / 普拉娜)
+    volumes:
+      - ./data:/app/data
+    environment:
+      - TZ=Asia/Shanghai
+      - SCHALE_HOST=0.0.0.0
+      - UOOC_PORT=51088
+      - ZHS_PORT=51089
+      - CX_PORT=51092

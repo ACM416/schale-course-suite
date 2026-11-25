@@ -1,0 +1,31 @@
+# Runtime user data (NEVER commit cookies, accounts, or API keys)
+data/
+logs/
+*.log
+cookies.json
+accounts.json
+uooc_config.json
+shared_ai_config.json
+ai_config.json
+
+# Python & virtualenvs
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+
+# Build & release artifacts
+build/
+dist/
+*.spec
+release/
+*.zip
+*.tar.gz
+*.exe
+
+# OS / IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

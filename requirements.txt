@@ -1,0 +1,5 @@
+Flask>=2.0.1
+requests>=2.28.0
+beautifulsoup4>=4.10.0
+pycryptodome>=3.15.0
+Pillow>=9.0.0

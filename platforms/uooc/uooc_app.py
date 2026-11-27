@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 import json
+import mimetypes
 import os
+
+mimetypes.add_type("image/webp", ".webp")
 import threading
 import time
 from collections import deque

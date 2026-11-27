@@ -2,7 +2,10 @@
 import hashlib
 import json
 import logging
+import mimetypes
 import os
+
+mimetypes.add_type("image/webp", ".webp")
 import re
 import sys
 import threading

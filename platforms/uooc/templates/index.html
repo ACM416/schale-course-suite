@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TRINITY TEA PARTY // UOOC 优课在线控制台 · 圣园未花</title>
+  <title>TRINITY TEA PARTY // UOOC 优课多账号控制台 · 圣园未花</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     /* ============================================================
@@ -28,15 +28,16 @@
       --accent-soft: rgba(236, 72, 153, 0.12);
       --accent-glow: rgba(236, 72, 153, 0.30);
       --gold: #eab308;
-      --cyan: #0ea5e9;
+      --cyan: #38bdf8;
       --emerald: #10b981;
       --shadow-card: 0 12px 32px -8px rgba(219, 39, 119, 0.14), 0 2px 6px rgba(168, 85, 247, 0.06);
       --term-bg: #1c1026;
       --term-border: rgba(236, 72, 153, 0.35);
       --input-bg: rgba(255, 255, 255, 0.96);
       --input-border: rgba(236, 72, 153, 0.28);
-      --halo-ring: #ec4899;
-      --halo-inner: #f5b400;
+      --halo-pink: #f472b6;
+      --halo-blue: #60a5fa;
+      --halo-gold: #fde047;
       --particle-rgb: 236, 72, 153;
       --star-rgb: 245, 180, 0;
     }
@@ -60,15 +61,16 @@
       --accent-soft: rgba(244, 114, 182, 0.16);
       --accent-glow: rgba(244, 114, 182, 0.34);
       --gold: #facc15;
-      --cyan: #38bdf8;
+      --cyan: #7dd3fc;
       --emerald: #34d399;
       --shadow-card: 0 14px 36px -8px rgba(0, 0, 0, 0.55), 0 0 18px rgba(244, 114, 182, 0.12);
       --term-bg: #0c0617;
       --term-border: rgba(244, 114, 182, 0.34);
       --input-bg: rgba(20, 11, 35, 0.92);
       --input-border: rgba(244, 114, 182, 0.30);
-      --halo-ring: #f472b6;
-      --halo-inner: #facc15;
+      --halo-pink: #f9a8d4;
+      --halo-blue: #7dd3fc;
+      --halo-gold: #fef08a;
       --particle-rgb: 244, 114, 182;
       --star-rgb: 250, 204, 21;
     }
@@ -136,6 +138,14 @@
       border-color: var(--border-strong);
       box-shadow: 0 18px 34px -10px var(--accent-glow);
     }
+    .ba-card.is-active {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px var(--accent), 0 18px 38px -10px var(--accent-glow);
+    }
+    .ba-card.is-active::before {
+      width: 6px; opacity: 1;
+      background: linear-gradient(180deg, var(--accent), var(--cyan), var(--gold));
+    }
 
     .ba-inner-box { background: var(--card-inner); border: 1px solid var(--border-main); }
 
@@ -154,22 +164,26 @@
     .ba-skew-btn:hover::after { left: 140%; }
     .ba-skew-btn:hover { transform: skewX(-11deg) translateY(-2px); filter: brightness(1.05); }
     .ba-skew-btn:active { transform: skewX(-11deg) translateY(1px) scale(0.97); }
+    .ba-skew-btn:disabled { opacity: 0.45; cursor: not-allowed; transform: skewX(-11deg); }
 
     .ba-btn-mika { background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: #fff; box-shadow: 0 6px 18px -4px var(--accent-glow); }
     .ba-btn-gold { background: linear-gradient(135deg, #f5b400, #fde047); color: #3b1933; box-shadow: 0 6px 16px -4px rgba(245, 180, 0, 0.42); }
     .ba-btn-rose { background: linear-gradient(135deg, #e11d48, #fb7185); color: #fff; box-shadow: 0 6px 16px -4px rgba(225, 29, 72, 0.35); }
+    .ba-btn-emerald { background: linear-gradient(135deg, #10b981, #38bdf8); color: #fff; box-shadow: 0 6px 16px -4px rgba(16, 185, 129, 0.35); }
     .ba-btn-ghost { background: var(--card-inner); color: var(--text-primary); border: 1px solid var(--border-main); }
     .ba-btn-ghost:hover { border-color: var(--accent); }
 
     .ba-skew-tag { display: inline-flex; align-items: center; transform: skewX(-12deg); border-radius: 5px; }
     .ba-skew-tag > span { transform: skewX(12deg); display: inline-flex; align-items: center; gap: 4px; }
 
-    .halo-spin { animation: spinSlow 18s linear infinite; transform-origin: center; }
-    .halo-spin-rev { animation: spinRev 12s linear infinite; transform-origin: center; }
+    /* Mika 3D Celestial Halo Animations */
     .halo-bob { animation: haloBob 3.2s ease-in-out infinite; }
-    @keyframes spinSlow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-    @keyframes spinRev { from { transform: rotate(360deg); } to { transform: rotate(0deg); } }
+    .mika-orbit-spin { animation: mikaOrbit 22s linear infinite; transform-origin: 32px 32px; }
+    .mika-star-twinkle { animation: starTwinkle 2.4s ease-in-out infinite; transform-origin: center; }
+    .mika-star-twinkle-2 { animation: starTwinkle 2.4s ease-in-out infinite 1.2s; transform-origin: center; }
     @keyframes haloBob { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-4px); } }
+    @keyframes mikaOrbit { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    @keyframes starTwinkle { 0%, 100% { opacity: 0.45; transform: scale(0.85); } 50% { opacity: 1; transform: scale(1.18); } }
 
     .ba-progress-track {
       background: rgba(236, 72, 153, 0.14); border: 1px solid var(--border-main);
@@ -259,40 +273,79 @@
   <header class="ba-layer ba-glass sticky top-0 z-40 px-4 sm:px-6 py-3.5 border-b">
     <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
       <div class="flex items-center gap-3.5">
-        <!-- Mika Starry Galaxy Halo SVG -->
-        <div class="relative w-11 h-11 flex items-center justify-center flex-shrink-0 halo-bob">
-          <svg viewBox="0 0 64 64" class="w-11 h-11 drop-shadow">
-            <g class="halo-spin">
-              <circle cx="32" cy="32" r="27" fill="none" stroke="var(--halo-ring)" stroke-width="2" stroke-dasharray="18 5 3 5" opacity="0.92"/>
-              <path d="M32 1 L33.8 6.2 L39 8 L33.8 9.8 L32 15 L30.2 9.8 L25 8 L30.2 6.2 Z" fill="var(--halo-inner)"/>
-              <path d="M32 51 L33.3 54.7 L37 56 L33.3 57.3 L32 61 L30.7 57.3 L27 56 L30.7 54.7 Z" fill="var(--halo-inner)"/>
+        <!-- Canonical Misono Mika 3D Celestial Planetary Spindle Halo SVG -->
+        <div class="relative w-12 h-12 flex items-center justify-center flex-shrink-0 halo-bob" title="圣园未花 · 星空行星光环">
+          <svg viewBox="0 0 64 64" class="w-12 h-12">
+            <defs>
+              <linearGradient id="mikaGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#7dd3fc"/>
+                <stop offset="52%" stop-color="#f472b6"/>
+                <stop offset="100%" stop-color="#fde68a"/>
+              </linearGradient>
+              <linearGradient id="mikaGrad2" x1="100%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#f9a8d4"/>
+                <stop offset="50%" stop-color="#c084fc"/>
+                <stop offset="100%" stop-color="#60a5fa"/>
+              </linearGradient>
+              <radialGradient id="mikaCoreGlow" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#ffffff" stop-opacity="0.95"/>
+                <stop offset="45%" stop-color="#f9a8d4" stop-opacity="0.65"/>
+                <stop offset="100%" stop-color="#60a5fa" stop-opacity="0"/>
+              </radialGradient>
+              <filter id="mikaGlow" x="-30%" y="-30%" width="160%" height="160%">
+                <feGaussianBlur stdDeviation="1.4" result="blur"/>
+                <feMerge>
+                  <feMergeNode in="blur"/>
+                  <feMergeNode in="SourceGraphic"/>
+                </feMerge>
+              </filter>
+            </defs>
+            <!-- Ambient cosmic glow -->
+            <circle cx="32" cy="32" r="21" fill="url(#mikaCoreGlow)" opacity="0.48"/>
+            <!-- 3D Intersecting Spiral Planetary Orbits (Mika's signature double-helix planet rings) -->
+            <g filter="url(#mikaGlow)" class="mika-orbit-spin">
+              <ellipse cx="32" cy="32" rx="26.5" ry="10.2" transform="rotate(-34 32 32)" fill="none" stroke="url(#mikaGrad1)" stroke-width="2.1" opacity="0.95"/>
+              <ellipse cx="32" cy="32" rx="26.5" ry="10.2" transform="rotate(34 32 32)" fill="none" stroke="url(#mikaGrad2)" stroke-width="2.1" opacity="0.92"/>
+              <!-- Equatorial Ring -->
+              <ellipse cx="32" cy="32" rx="23" ry="5.6" fill="none" stroke="url(#mikaGrad1)" stroke-width="1.35" opacity="0.82"/>
+              <!-- Orbiting tiny star satellites -->
+              <circle cx="53.5" cy="18.5" r="1.9" fill="#fde047"/>
+              <circle cx="10.5" cy="45.5" r="1.7" fill="#7dd3fc"/>
+              <circle cx="53" cy="46" r="1.5" fill="#f9a8d4"/>
             </g>
-            <g class="halo-spin-rev">
-              <circle cx="32" cy="32" r="19" fill="none" stroke="var(--accent-2)" stroke-width="1.8" stroke-dasharray="10 6" opacity="0.8"/>
-              <circle cx="51" cy="32" r="2.2" fill="var(--halo-inner)"/>
-              <circle cx="13" cy="32" r="2.2" fill="var(--halo-ring)"/>
-            </g>
-            <circle cx="32" cy="32" r="11" fill="var(--accent)" opacity="0.16"/>
-            <text x="32" y="37" text-anchor="middle" font-size="14" font-weight="900" fill="var(--accent)">U</text>
+            <!-- Central 3D Vertical Spindle (纺锤体星核) -->
+            <path d="M32 7.5 C36.5 21 36.5 43 32 56.5 C27.5 43 27.5 21 32 7.5 Z" fill="url(#mikaGrad2)" fill-opacity="0.28" stroke="url(#mikaGrad1)" stroke-width="1.7" filter="url(#mikaGlow)"/>
+            <!-- Inner bright 4-point celestial star core -->
+            <path d="M32 23.5 L34.1 29.9 L40.5 32 L34.1 34.1 L32 40.5 L29.9 34.1 L23.5 32 L29.9 29.9 Z" fill="#ffffff" stroke="#fde047" stroke-width="0.6" filter="url(#mikaGlow)"/>
+            <!-- Floating twinkling 4-point stars around the spindle -->
+            <path class="mika-star-twinkle" d="M14 14 L15.2 17.3 L18.5 18.5 L15.2 19.7 L14 23 L12.8 19.7 L9.5 18.5 L12.8 17.3 Z" fill="#fde047"/>
+            <path class="mika-star-twinkle-2" d="M51 48 L51.9 50.6 L54.5 51.5 L51.9 52.4 L51 55 L50.1 52.4 L47.5 51.5 L50.1 50.6 Z" fill="#f9a8d4"/>
           </svg>
         </div>
 
         <div>
           <div class="flex flex-wrap items-center gap-2">
             <span class="text-base sm:text-lg font-black tracking-tight text-main">
-              TRINITY <span style="color:var(--accent)">☆</span> UOOC 优课在线控制台
+              TRINITY <span style="color:var(--accent)">☆</span> UOOC 多账号控制台
             </span>
             <span class="ba-skew-tag px-2 py-0.5 text-[10px] font-bold text-white" style="background:linear-gradient(135deg,var(--accent),var(--accent-2))">
               <span>MIKA · 圣园未花</span>
             </span>
           </div>
-          <p class="text-[11px] text-sub mt-0.5">S.C.H.A.L.E. Open-Source Suite · Port 51088 · 茶话会守护模式</p>
+          <p class="text-[11px] text-sub mt-0.5 flex items-center gap-2">
+            <span>独立多线程并发引擎</span>
+            <span class="opacity-40">|</span>
+            <span>自动防拖拽降速 · 纯 Python 时长探测</span>
+          </p>
         </div>
       </div>
 
       <div class="flex flex-wrap items-center gap-2">
-        <button onclick="toggleTheme()" class="ba-skew-btn ba-btn-ghost px-3 py-1.5 text-xs font-bold">
+        <button onclick="toggleTheme()" class="ba-skew-btn ba-btn-ghost px-3 py-1.5 text-xs font-bold" title="切换樱粉星穹 / 银河星夜">
           <span id="theme-label">🌸 圣三一樱粉</span>
+        </button>
+        <button onclick="openAddAccountModal()" class="ba-skew-btn ba-btn-emerald px-3.5 py-1.5 text-xs font-bold">
+          <span>➕ 添加新账号</span>
         </button>
         <button onclick="openAssistant('', 'exercise')" class="ba-skew-btn ba-btn-mika px-3.5 py-1.5 text-xs font-bold">
           <span>🧠 联网解析助手</span>
@@ -311,16 +364,35 @@
   </header>
 
   <main class="ba-layer max-w-7xl mx-auto px-4 sm:px-6 pt-6 space-y-6">
-    <!-- Mika Tea Party Live Broadcast Strip -->
-    <div class="ba-glass rounded-2xl p-4 sm:p-5 flex flex-wrap items-center justify-between gap-4">
+    <!-- Mika Tea Party Broadcast Strip + Global Batch Controls -->
+    <div class="ba-glass rounded-2xl p-5 flex flex-col lg:flex-row lg:items-center justify-between gap-4 relative overflow-hidden">
       <div class="flex items-center gap-3.5">
+        <!-- Mika Angelic Wings + Miniature Starry Halo Emblem -->
         <div class="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0" style="background:var(--accent-soft); border:1.5px solid var(--border-strong)">
-          <svg viewBox="0 0 48 48" class="w-9 h-9">
-            <path d="M24 3 L26 8 L31 10 L26 12 L24 17 L22 12 L17 10 L22 8 Z" fill="var(--gold)" class="halo-bob"/>
-            <circle cx="24" cy="29" r="11" fill="var(--accent)" opacity="0.22"/>
-            <circle cx="20" cy="28" r="1.8" fill="var(--accent)"/>
-            <circle cx="28" cy="28" r="1.8" fill="var(--accent)"/>
-            <path d="M20 33 Q24 36.5 28 33" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"/>
+          <svg viewBox="0 0 64 64" class="w-10 h-10">
+            <defs>
+              <linearGradient id="mikaWingGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#ffffff"/>
+                <stop offset="100%" stop-color="#fbcfe8"/>
+              </linearGradient>
+              <linearGradient id="mikaMiniHalo" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#7dd3fc"/>
+                <stop offset="50%" stop-color="#f472b6"/>
+                <stop offset="100%" stop-color="#fde047"/>
+              </linearGradient>
+            </defs>
+            <!-- Left Angel Wing -->
+            <path d="M29 38 C16 37 8 28 7 18 C13 21 19 24 25 29 C16 27 11 30 9 34 C15 35 21 36 27 38 C19 40 14 43 12 47 C19 47 25 44 29 41 Z" fill="url(#mikaWingGrad)" stroke="#ec4899" stroke-width="1.2" stroke-linejoin="round"/>
+            <!-- Right Angel Wing -->
+            <path d="M35 38 C48 37 56 28 57 18 C51 21 45 24 39 29 C48 27 53 30 55 34 C49 35 43 36 37 38 C45 40 50 43 52 47 C45 47 39 44 35 41 Z" fill="url(#mikaWingGrad)" stroke="#ec4899" stroke-width="1.2" stroke-linejoin="round"/>
+            <!-- Miniature Mika 3D Halo floating between wings -->
+            <g class="halo-bob">
+              <ellipse cx="32" cy="19" rx="13" ry="4.5" transform="rotate(-20 32 19)" fill="none" stroke="url(#mikaMiniHalo)" stroke-width="1.8"/>
+              <ellipse cx="32" cy="19" rx="13" ry="4.5" transform="rotate(20 32 19)" fill="none" stroke="url(#mikaMiniHalo)" stroke-width="1.8"/>
+              <path d="M32 11 L33.6 17.4 L40 19 L33.6 20.6 L32 27 L30.4 20.6 L24 19 L30.4 17.4 Z" fill="#fde047"/>
+            </g>
+            <!-- Central Heart-Star Gem -->
+            <path d="M32 32 L34.5 38 L32 45 L29.5 38 Z" fill="#ec4899" opacity="0.88"/>
           </svg>
         </div>
         <div class="space-y-1">
@@ -328,186 +400,172 @@
             <span class="ba-skew-tag px-2 py-0.5 text-[10px] font-black text-white" style="background:linear-gradient(135deg,var(--accent),var(--accent-2))">
               <span>MIKA · 茶话会执勤</span>
             </span>
-            <span id="system-badge" class="text-xs font-bold px-2.5 py-0.5 rounded-full ba-inner-box text-main flex items-center gap-1.5">
+            <span id="global-summary-badge" class="text-xs font-bold px-2.5 py-0.5 rounded-full ba-inner-box text-main flex items-center gap-1.5">
               <span class="ba-live-dot"></span>
-              <span>服务就绪</span>
+              <span>已接入 0 个账号 · 0 个并发中</span>
             </span>
           </div>
           <p id="mika-speech" class="text-xs sm:text-sm font-medium text-sub">
-            老师☆ 欢迎来到茶话会优课控制台！要不要泡杯红茶，把剩下的视频交给我来推进呀~
+            老师☆ 欢迎来到茶话会优课多账号控制台！正在同步各个账号的进度...
           </p>
         </div>
       </div>
 
-      <div id="runner-state-pill" class="ba-skew-tag px-3 py-1 text-xs font-black ba-inner-box text-sub">
-        <span>STANDBY · 空闲中</span>
+      <!-- Global Speed / Interval & Batch Buttons -->
+      <div class="flex flex-wrap items-center gap-2">
+        <div class="flex items-center gap-2 ba-inner-box rounded-xl px-3 py-1.5">
+          <span class="text-xs font-semibold text-sub">倍速</span>
+          <select id="global-speed-select" class="text-xs font-bold bg-transparent text-main focus:outline-none cursor-pointer">
+            <option value="1.0" style="color:#0f172a">1.0x 稳健</option>
+            <option value="1.25" style="color:#0f172a">1.25x 平稳</option>
+            <option value="1.5" selected style="color:#0f172a">1.5x 推荐</option>
+            <option value="2.0" style="color:#0f172a">2.0x 上限</option>
+          </select>
+        </div>
+        <div class="flex items-center gap-2 ba-inner-box rounded-xl px-3 py-1.5">
+          <span class="text-xs font-semibold text-sub">心跳</span>
+          <select id="global-interval-select" class="text-xs font-bold bg-transparent text-main focus:outline-none cursor-pointer">
+            <option value="10" style="color:#0f172a">10s</option>
+            <option value="15" selected style="color:#0f172a">15s</option>
+            <option value="20" style="color:#0f172a">20s</option>
+            <option value="30" style="color:#0f172a">30s</option>
+          </select>
+        </div>
+        <button onclick="startAllAccounts()" class="ba-skew-btn ba-btn-mika px-4 py-2 text-xs font-bold">
+          <span>🚀 全部同时开刷</span>
+        </button>
+        <button onclick="pauseAllAccounts()" class="ba-skew-btn ba-btn-gold px-3.5 py-2 text-xs font-bold">
+          <span>⏸ 全部暂停/恢复</span>
+        </button>
+        <button onclick="stopAllAccounts()" class="ba-skew-btn ba-btn-rose px-3.5 py-2 text-xs font-bold">
+          <span>⏹ 全部停止</span>
+        </button>
       </div>
     </div>
 
-    <!-- Top Grid: Auth & Control -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      <!-- Cookie Setup Card -->
-      <div class="ba-glass rounded-2xl p-6 lg:col-span-1 flex flex-col justify-between">
-        <div>
-          <div class="flex items-center justify-between mb-4 pb-2" style="border-bottom:1px solid var(--border-main)">
-            <h2 class="text-sm font-black text-main tracking-wider flex items-center gap-2">
-              🔑 UOOC 身份凭证
-            </h2>
-            <span id="user-status-text" class="text-xs font-bold text-mute">未认证</span>
-          </div>
-
-          <div class="space-y-3">
-            <div>
-              <label class="block text-xs font-semibold text-sub mb-1">浏览器 Cookie（自动同步持久化）</label>
-              <textarea id="cookie-input" rows="3" placeholder="从浏览器登录 uooc.net.cn 后，F12 复制 Cookie 贴入此处..."
-                class="ba-input w-full text-xs font-mono rounded-xl p-3"></textarea>
-            </div>
-            <button onclick="saveCookie()" id="btn-save-cookie" class="ba-skew-btn ba-btn-mika w-full py-2.5 text-xs font-bold">
-              <span>✨ 校验并保存 Cookie</span>
-            </button>
-          </div>
-
-          <!-- User Info Card -->
-          <div id="user-info-card" class="mt-4 p-3 rounded-xl ba-inner-box hidden">
-            <div class="flex items-center space-x-3">
-              <div class="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold overflow-hidden flex-shrink-0"
-                   style="background:var(--accent-soft); border:1.5px solid var(--border-strong)" id="user-avatar-box">
-                👤
-              </div>
-              <div class="text-xs space-y-0.5 overflow-hidden">
-                <div class="font-black text-main truncate" id="user-name">--</div>
-                <div class="text-sub truncate" id="user-school">--</div>
-                <div class="text-mute font-mono" id="user-uid">UID: --</div>
-              </div>
-            </div>
-          </div>
+    <!-- Multi-Account Concurrent Pool Grid -->
+    <section class="space-y-3">
+      <div class="flex items-center justify-between px-1">
+        <div class="flex items-center gap-2">
+          <span class="w-1.5 h-5 rounded-full" style="background:linear-gradient(180deg,var(--accent),var(--gold))"></span>
+          <h2 class="text-sm font-black tracking-wide text-main uppercase">TEA PARTY SQUAD // 多账号并发小队</h2>
         </div>
-
-        <div class="mt-4 pt-3 text-[11px] text-mute" style="border-top:1px solid var(--border-main)">
-          💡 登录 <code>uooc.net.cn</code> 后按 F12 复制任意请求头中的 Cookie 即可。
-        </div>
+        <span class="text-[11px] text-mute">点击任意账号卡片切换下方课程列表</span>
       </div>
 
-      <!-- Settings & Global Control Card -->
-      <div class="ba-glass rounded-2xl p-6 lg:col-span-2 flex flex-col justify-between">
-        <div>
-          <div class="flex items-center justify-between mb-4 pb-2" style="border-bottom:1px solid var(--border-main)">
-            <h2 class="text-sm font-black text-main tracking-wider flex items-center gap-2">
-              ⚙️ 星穹策略与控制中心
-            </h2>
-            <span class="text-[11px] font-semibold text-mute">自动退避降速防风控</span>
-          </div>
-
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
-            <!-- Speed Multiplier -->
-            <div class="p-4 rounded-xl ba-inner-box">
-              <div class="flex justify-between items-center mb-2">
-                <label class="text-xs font-bold text-main">上报倍速倍率</label>
-                <span id="speed-val" class="text-xs font-black font-mono" style="color:var(--accent)">1.5x</span>
-              </div>
-              <input type="range" id="speed-slider" min="1.0" max="2.0" step="0.25" value="1.5"
-                oninput="document.getElementById('speed-val').innerText = this.value + 'x'"
-                class="w-full accent-pink-500 cursor-pointer">
-              <div class="flex justify-between text-[10px] text-mute mt-1">
-                <span>1.0x 原速稳健</span>
-                <span style="color:var(--accent)" class="font-bold">1.5x 极速推荐</span>
-                <span>2.0x 上限</span>
-              </div>
-            </div>
-
-            <!-- Heartbeat Interval -->
-            <div class="p-4 rounded-xl ba-inner-box">
-              <div class="flex justify-between items-center mb-2">
-                <label class="text-xs font-bold text-main">心跳上报间隔</label>
-                <span id="interval-val" class="text-xs font-black font-mono" style="color:var(--accent-2)">15s</span>
-              </div>
-              <input type="range" id="interval-slider" min="10" max="30" step="5" value="15"
-                oninput="document.getElementById('interval-val').innerText = this.value + 's'"
-                class="w-full accent-purple-500 cursor-pointer">
-              <div class="flex justify-between text-[10px] text-mute mt-1">
-                <span>10秒 快速</span>
-                <span style="color:var(--accent-2)" class="font-bold">15秒 均衡</span>
-                <span>30秒 拟人</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Action Buttons -->
-          <div class="flex flex-wrap items-center gap-3">
-            <button onclick="startAllCourses()" id="btn-start-all" class="ba-skew-btn ba-btn-mika flex-1 py-3 px-6 text-xs sm:text-sm font-black">
-              <span>🚀 一键刷完所有未完成课程</span>
-            </button>
-            <button onclick="pauseTask()" id="btn-pause" class="ba-skew-btn ba-btn-gold py-3 px-5 text-xs sm:text-sm font-bold">
-              <span>⏸ 暂停 / 继续</span>
-            </button>
-            <button onclick="stopTask()" id="btn-stop" class="ba-skew-btn ba-btn-rose py-3 px-5 text-xs sm:text-sm font-bold">
-              <span>⏹ 停止任务</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- Live Progress Bar -->
-        <div class="mt-5 pt-4" style="border-top:1px solid var(--border-main)">
-          <div class="flex items-center justify-between text-xs mb-2">
-            <div class="truncate max-w-[70%]">
-              <span class="text-sub font-semibold">正在播放：</span>
-              <span id="active-video-title" class="text-main font-black">无运行中的任务</span>
-            </div>
-            <div id="active-video-time" class="font-mono font-bold text-[11px]" style="color:var(--accent)">0.0s / 0.0s (0%)</div>
-          </div>
-          <div class="ba-progress-track w-full h-3">
-            <div id="active-progress-bar" class="ba-progress-fill" style="width: 0%"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Course Library & Realtime Log Split -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-      <!-- Courses List -->
-      <div class="ba-glass rounded-2xl p-6">
-        <div class="flex items-center justify-between mb-4 pb-2" style="border-bottom:1px solid var(--border-main)">
-          <h2 class="text-sm font-black text-main tracking-wider flex items-center gap-2">
-            📚 我的课程列表
-            <span id="course-count-badge" class="ba-skew-tag px-2 py-0.5 text-[11px] font-bold text-white" style="background:var(--accent)"><span>0</span></span>
-          </h2>
-          <button onclick="loadCourses()" class="ba-skew-btn ba-btn-ghost px-3 py-1 text-xs font-semibold">
-            <span>🔄 重新获取</span>
+      <div id="accounts-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div class="col-span-full ba-glass rounded-2xl p-10 text-center space-y-3">
+          <div class="text-3xl">☆</div>
+          <div class="text-sm font-bold text-main">尚未编入 UOOC 账号</div>
+          <p class="text-xs text-sub">点击下方按钮粘贴 Cookie 添加一个或多个 UOOC 账号，所有账号均可独立线程并发推进。</p>
+          <button onclick="openAddAccountModal()" class="ba-skew-btn ba-btn-mika px-5 py-2 text-xs font-bold">
+            <span>➕ 添加第一个 UOOC 账号</span>
           </button>
         </div>
+      </div>
+    </section>
 
-        <div id="course-list-container" class="space-y-3 max-h-[480px] overflow-y-auto pr-1 terminal-scroll">
-          <div class="text-center py-12 text-mute text-xs">
-            暂无课程数据，请先填入有效 Cookie 并校验。
-          </div>
+    <!-- Selected Account Course List Panel -->
+    <section class="ba-glass rounded-2xl p-5 sm:p-6 space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-3 pb-3" style="border-bottom:1px solid var(--border-main)">
+        <div class="flex flex-wrap items-center gap-2.5">
+          <span class="w-1.5 h-5 rounded-full" style="background:linear-gradient(180deg,var(--gold),var(--accent))"></span>
+          <h2 class="text-sm font-black text-main tracking-wide">COURSES // 选中账号课程列表</h2>
+          <span id="active-account-pill" class="ba-skew-tag px-2.5 py-0.5 text-xs font-bold text-white" style="background:var(--accent)">
+            <span>未选中账号</span>
+          </span>
+          <span id="course-count-badge" class="text-xs font-bold px-2.5 py-0.5 rounded-full ba-inner-box text-sub">
+            0 门课程
+          </span>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2.5">
+          <label class="flex items-center gap-1.5 text-xs font-semibold text-sub cursor-pointer">
+            <input type="checkbox" id="select-all-courses" checked onchange="toggleSelectAllCourses(this.checked)" class="rounded accent-pink-500">
+            <span>全选</span>
+          </label>
+          <button onclick="startActiveSelectedCourses()" class="ba-skew-btn ba-btn-mika px-3.5 py-1.5 text-xs font-bold">
+            <span>▶ 刷选中课程</span>
+          </button>
+          <button onclick="loadActiveAccountCourses()" class="ba-skew-btn ba-btn-ghost px-3 py-1.5 text-xs font-semibold">
+            <span>🔄 刷新课程</span>
+          </button>
         </div>
       </div>
 
-      <!-- Realtime Log Terminal -->
-      <div class="ba-glass rounded-2xl p-6 flex flex-col h-[550px]">
-        <div class="flex items-center justify-between mb-3 pb-2" style="border-bottom:1px solid var(--border-main)">
-          <h2 class="text-sm font-black text-main tracking-wider flex items-center gap-2">
+      <div id="course-list-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div class="col-span-full text-center py-10 text-mute text-xs">
+          选择上方账号卡片加载课程列表...
+        </div>
+      </div>
+    </section>
+
+    <!-- Realtime Log Terminal -->
+    <section class="ba-glass rounded-2xl p-5 sm:p-6 space-y-3">
+      <div class="flex flex-wrap items-center justify-between gap-3 pb-2" style="border-bottom:1px solid var(--border-main)">
+        <div class="flex flex-wrap items-center gap-3">
+          <div class="flex items-center gap-2">
             <span class="ba-live-dot"></span>
-            <span>TRINITY TERMINAL // 实时日志</span>
-          </h2>
-          <div class="flex items-center space-x-2">
-            <label class="text-xs font-semibold text-sub flex items-center gap-1 cursor-pointer">
-              <input type="checkbox" id="auto-scroll" checked class="accent-pink-500">
-              自动滚动
-            </label>
-            <button onclick="clearLogs()" class="ba-skew-btn ba-btn-ghost px-2.5 py-1 text-xs font-semibold">
-              <span>清空</span>
+            <h2 class="text-sm font-black text-main tracking-wider">TRINITY TERMINAL // 实时运行日志</h2>
+          </div>
+          <div class="flex gap-1 ba-inner-box p-1 rounded-xl text-xs">
+            <button id="log-mode-all" onclick="setLogMode('all')" class="px-2.5 py-1 rounded-lg font-bold text-white transition" style="background:var(--accent)">
+              🌐 全部账号聚合
+            </button>
+            <button id="log-mode-single" onclick="setLogMode('single')" class="px-2.5 py-1 rounded-lg font-semibold text-sub transition">
+              👤 仅当前选中
             </button>
           </div>
         </div>
-
-        <div id="terminal-box" class="flex-1 rounded-xl p-4 font-mono text-xs overflow-y-auto terminal-scroll space-y-1 text-pink-100"
-             style="background:var(--term-bg); border:1px solid var(--term-border)">
-          <div class="text-pink-300/70">[TRINITY] 茶话会优课引擎已待命...</div>
+        <div class="flex items-center space-x-2">
+          <label class="text-xs font-semibold text-sub flex items-center gap-1 cursor-pointer">
+            <input type="checkbox" id="auto-scroll" checked class="accent-pink-500">
+            自动滚动
+          </label>
+          <button onclick="clearLogs()" class="ba-skew-btn ba-btn-ghost px-2.5 py-1 text-xs font-semibold">
+            <span>清空</span>
+          </button>
         </div>
       </div>
-    </div>
+
+      <div id="terminal-box" class="rounded-xl p-4 font-mono text-xs h-64 overflow-y-auto terminal-scroll space-y-1 text-pink-100"
+           style="background:var(--term-bg); border:1px solid var(--term-border)">
+        <div class="text-pink-300/70">[TRINITY] 茶话会多账号优课引擎已待命...</div>
+      </div>
+    </section>
   </main>
+
+  <!-- Add New UOOC Account Modal -->
+  <div id="add-account-modal" class="hidden fixed inset-0 z-50 bg-slate-950/65 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="ba-glass ba-modal-panel w-full max-w-md rounded-2xl overflow-hidden" style="background:var(--glass-strong); border-color:var(--border-strong)">
+      <div class="px-5 py-4 flex items-center justify-between" style="border-bottom:1px solid var(--border-main); background:var(--accent-soft)">
+        <div>
+          <h3 class="text-sm font-black text-main">➕ 接入新 UOOC 账号</h3>
+          <p class="text-[11px] text-sub mt-0.5">每个账号独立线程运行，互不干扰</p>
+        </div>
+        <button onclick="closeAddAccountModal()" class="w-8 h-8 rounded-lg flex items-center justify-center text-sub hover:text-main ba-inner-box font-bold">✕</button>
+      </div>
+
+      <div class="p-5 space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-sub mb-1">账号代号 / 备注（可选）</label>
+          <input id="new-account-remark" type="text" placeholder="例如：主号 / 舍友A / 备用号"
+            class="ba-input w-full text-xs rounded-xl px-3 py-2.5">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-sub mb-1">浏览器 Cookie（登录 uooc.net.cn 后 F12 复制）</label>
+          <textarea id="cookie-input" rows="5" placeholder="粘贴 uooc.net.cn 请求头中的完整 Cookie 串..."
+            class="ba-input w-full text-xs font-mono rounded-xl p-3"></textarea>
+        </div>
+        <button onclick="saveCookie()" id="btn-save-cookie" class="ba-skew-btn ba-btn-mika w-full py-2.5 text-xs font-bold">
+          <span>✨ 校验并加入多账号并发池</span>
+        </button>
+        <p class="text-[11px] text-mute leading-relaxed">
+          💡 若导入同一 UID 的新 Cookie，会自动刷新该账号凭证而不产生重复卡片。
+        </p>
+      </div>
+    </div>
+  </div>
 
   <!-- Shared Study Assistant Modal -->
   <div id="assistant-modal" class="hidden fixed inset-0 z-50 bg-slate-950/65 backdrop-blur-md flex items-center justify-center p-4">
@@ -577,7 +635,7 @@
           </div>
           <div class="flex flex-col sm:flex-row gap-2 items-stretch sm:items-end">
             <div class="flex-1">
-              <label class="block text-[11px] font-semibold text-sub mb-1">API Key（留空保留原 Key，持久化在本地 data/）</label>
+              <label class="block text-[11px] font-semibold text-sub mb-1">API Key（留空保留原 Key，持久化在本地）</label>
               <input id="ai-key" type="password" placeholder="sk-..." class="ba-input w-full text-xs rounded-lg px-2.5 py-1.5">
             </div>
             <button type="button" onclick="saveAssistantConfig(false)" class="ba-skew-btn ba-btn-mika px-4 py-1.5 text-xs font-bold">
@@ -636,7 +694,7 @@
           rot: Math.random() * Math.PI * 2,
           vrot: (Math.random() - 0.5) * 0.02,
           phase: Math.random() * Math.PI * 2,
-          kind: i % 3 // 0: 4-point star, 1: sakura petal diamond, 2: soft sparkle dot
+          kind: i % 3
         });
       }
 
@@ -733,8 +791,11 @@
       }, 3200);
     }
 
-    /* --- UOOC Core Logic --- */
+    /* --- Multi-Account UOOC Controller --- */
     let pollTimer = null;
+    let activeAccountId = '';
+    let accountsList = [];
+    let logMode = 'all';
 
     function escapeHtml(text) {
       return String(text || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -743,45 +804,37 @@
       return escapeHtml(text).replace(/"/g, '&quot;').replace(/'/g, '&#39;');
     }
 
-    async function init() {
-      applyTheme(localStorage.getItem('ba_uooc_theme') || 'mika-day');
-      await loadConfig();
-      await checkUser();
-      startPolling();
+    function openAddAccountModal() {
+      document.getElementById('add-account-modal').classList.remove('hidden');
+      document.getElementById('new-account-remark').value = '';
+      document.getElementById('cookie-input').value = '';
     }
-
-    async function loadConfig() {
-      try {
-        const res = await fetch('/api/config');
-        const cfg = await res.json();
-        if (cfg.cookie) document.getElementById('cookie-input').value = cfg.cookie;
-        if (cfg.speed) {
-          document.getElementById('speed-slider').value = cfg.speed;
-          document.getElementById('speed-val').innerText = cfg.speed + 'x';
-        }
-        if (cfg.interval) {
-          document.getElementById('interval-slider').value = cfg.interval;
-          document.getElementById('interval-val').innerText = cfg.interval + 's';
-        }
-      } catch (e) {}
+    function closeAddAccountModal() {
+      document.getElementById('add-account-modal').classList.add('hidden');
     }
 
     async function saveCookie() {
       const btn = document.getElementById('btn-save-cookie');
       const cookie = document.getElementById('cookie-input').value.trim();
+      const remark = document.getElementById('new-account-remark').value.trim();
+      const speed = parseFloat(document.getElementById('global-speed-select').value) || 1.5;
+      const interval = parseInt(document.getElementById('global-interval-select').value) || 15;
       if (!cookie) return showToast('请先输入 Cookie 哦，老师~', 'warn');
+
       btn.disabled = true;
       btn.innerHTML = '<span>校验中...</span>';
       try {
         const res = await fetch('/api/cookie', {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ cookie })
+          body: JSON.stringify({ cookie, remark, speed, interval })
         });
         const data = await res.json();
-        if (data.code === 1) {
-          renderUser(data.user);
-          await loadCourses();
-          showToast('Cookie 校验成功，已读取用户信息☆', 'ok');
+        if (data.code === 1 || data.ok) {
+          if (data.account_id) activeAccountId = data.account_id;
+          closeAddAccountModal();
+          showToast(data.msg || 'Cookie 校验并接入成功☆', 'ok');
+          await pollStatus();
+          await loadActiveAccountCourses();
         } else {
           showToast(data.msg || 'Cookie 校验失败', 'err');
         }
@@ -789,45 +842,129 @@
         showToast('请求失败: ' + e, 'err');
       } finally {
         btn.disabled = false;
-        btn.innerHTML = '<span>✨ 校验并保存 Cookie</span>';
+        btn.innerHTML = '<span>✨ 校验并加入多账号并发池</span>';
       }
     }
 
-    async function checkUser() {
-      try {
-        const res = await fetch('/api/user');
-        const data = await res.json();
-        if (data.code === 1) {
-          renderUser(data.user);
-          await loadCourses();
+    function selectAccount(aid) {
+      if (activeAccountId !== aid) {
+        activeAccountId = aid;
+        renderAccountCards();
+        pollStatus();
+        loadActiveAccountCourses();
+      }
+    }
+
+    function renderAccountCards() {
+      const grid = document.getElementById('accounts-grid');
+      if (!accountsList || accountsList.length === 0) {
+        grid.innerHTML = `
+          <div class="col-span-full ba-glass rounded-2xl p-10 text-center space-y-3">
+            <div class="text-3xl">☆</div>
+            <div class="text-sm font-bold text-main">尚未编入 UOOC 账号</div>
+            <p class="text-xs text-sub">点击下方按钮粘贴 Cookie 添加一个或多个 UOOC 账号，所有账号均可独立线程并发推进。</p>
+            <button onclick="openAddAccountModal()" class="ba-skew-btn ba-btn-mika px-5 py-2 text-xs font-bold">
+              <span>➕ 添加第一个 UOOC 账号</span>
+            </button>
+          </div>`;
+        return;
+      }
+
+      grid.innerHTML = accountsList.map((acc, idx) => {
+        const isActive = acc.account_id === activeAccountId;
+        const isRunning = acc.running && !acc.paused;
+        const isPaused = acc.running && acc.paused;
+        const pct = (acc.progress_percent || 0).toFixed(1);
+
+        let statusTag = `<span class="ba-skew-tag px-2 py-0.5 text-[10px] font-bold ba-inner-box text-sub"><span>STANDBY · 空闲</span></span>`;
+        if (!acc.logged_in) {
+          statusTag = `<span class="ba-skew-tag px-2 py-0.5 text-[10px] font-bold text-white" style="background:#e11d48"><span>EXPIRED · 失效</span></span>`;
+        } else if (isRunning) {
+          statusTag = `<span class="ba-skew-tag px-2 py-0.5 text-[10px] font-bold text-white animate-pulse" style="background:linear-gradient(135deg,var(--accent),var(--accent-2))"><span>⚡ ACTIVE · 并发中</span></span>`;
+        } else if (isPaused) {
+          statusTag = `<span class="ba-skew-tag px-2 py-0.5 text-[10px] font-bold text-slate-900" style="background:var(--gold)"><span>⏸ PAUSED · 暂停</span></span>`;
+        } else if (acc.status === 'error') {
+          statusTag = `<span class="ba-skew-tag px-2 py-0.5 text-[10px] font-bold text-white" style="background:#e11d48"><span>❌ ERROR</span></span>`;
         }
-      } catch (e) {}
+
+        const courseTitle = acc.current_course_name || '待指派课程';
+        const videoTitle = acc.current_video_title || acc.action || '等待指令';
+        const completed = (acc.stats && acc.stats.completed_videos) || 0;
+        const locked = (acc.stats && acc.stats.locked_videos) || 0;
+
+        const ctrlBtn = isRunning
+          ? `<button onclick="event.stopPropagation(); pauseAccount('${escapeAttr(acc.account_id)}')" class="ba-skew-btn ba-btn-gold px-2.5 py-1 text-[11px] font-bold"><span>⏸ 暂停</span></button>
+             <button onclick="event.stopPropagation(); stopAccount('${escapeAttr(acc.account_id)}')" class="ba-skew-btn ba-btn-rose px-2.5 py-1 text-[11px] font-bold"><span>⏹ 停止</span></button>`
+          : isPaused
+          ? `<button onclick="event.stopPropagation(); pauseAccount('${escapeAttr(acc.account_id)}')" class="ba-skew-btn ba-btn-emerald px-2.5 py-1 text-[11px] font-bold"><span>▶ 继续</span></button>
+             <button onclick="event.stopPropagation(); stopAccount('${escapeAttr(acc.account_id)}')" class="ba-skew-btn ba-btn-rose px-2.5 py-1 text-[11px] font-bold"><span>⏹ 停止</span></button>`
+          : `<button onclick="event.stopPropagation(); startAccountAll('${escapeAttr(acc.account_id)}')" class="ba-skew-btn ba-btn-mika px-3 py-1 text-[11px] font-bold"><span>▶ 一键开刷</span></button>`;
+
+        return `
+          <div onclick="selectAccount('${escapeAttr(acc.account_id)}')" class="ba-card rounded-2xl p-4 pl-5 cursor-pointer space-y-3 ${isActive ? 'is-active' : ''}">
+            <div class="flex items-start justify-between gap-2">
+              <div class="flex items-center gap-2.5 overflow-hidden">
+                <div class="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold overflow-hidden flex-shrink-0" style="background:var(--accent-soft); border:1.5px solid var(--border-strong)">
+                  ${acc.avatar ? `<img src="${escapeAttr(acc.avatar)}" class="w-full h-full object-cover" onerror="this.remove()">` : '☆'}
+                </div>
+                <div class="overflow-hidden">
+                  <div class="flex items-center gap-1.5">
+                    <span class="text-[10px] font-black px-1.5 py-0.5 rounded" style="background:var(--accent-soft); color:var(--accent)">#${String(idx + 1).padStart(2, '0')}</span>
+                    <span class="text-sm font-black text-main truncate">${escapeHtml(acc.display_label)}</span>
+                  </div>
+                  <div class="text-[11px] text-mute font-mono truncate mt-0.5">UID: ${escapeHtml(acc.account_id)} ${acc.school_name ? '· ' + escapeHtml(acc.school_name) : ''}</div>
+                </div>
+              </div>
+              <div class="flex-shrink-0">${statusTag}</div>
+            </div>
+
+            <div class="ba-inner-box rounded-xl p-3 space-y-1.5">
+              <div class="text-xs font-bold text-main truncate" title="${escapeAttr(courseTitle)}">🌸 ${escapeHtml(courseTitle)}</div>
+              <div class="text-[11px] text-sub truncate" title="${escapeAttr(videoTitle)}">${escapeHtml(videoTitle)}</div>
+              <div class="flex justify-between text-[10px] font-mono text-mute pt-1">
+                <span>${escapeHtml(acc.time_str || '--:-- / --:--')} · ${acc.speed}x</span>
+                <span class="font-black" style="color:var(--accent)">${pct}%</span>
+              </div>
+              <div class="ba-progress-track h-2.5 w-full">
+                <div class="ba-progress-fill ${isRunning ? 'is-running' : ''}" style="width: ${pct}%"></div>
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between text-[11px] font-semibold text-sub">
+              <span>✅ 完成 <b style="color:var(--emerald)">${completed}</b> · 🔒 闯关锁 <b style="color:var(--gold)">${locked}</b></span>
+              ${isActive ? '<span class="text-[10px] font-black" style="color:var(--accent)">● 当前查看</span>' : ''}
+            </div>
+
+            <div class="pt-2.5 flex flex-wrap items-center justify-between gap-2" style="border-top:1px solid var(--border-main)">
+              <div class="flex items-center gap-1.5">${ctrlBtn}</div>
+              <div class="flex items-center gap-1.5">
+                <button onclick="event.stopPropagation(); editRemark('${escapeAttr(acc.account_id)}', '${escapeAttr(acc.remark || '')}')" class="ba-skew-btn ba-btn-ghost px-2 py-1 text-[11px] font-semibold">
+                  <span>✏️ 备注</span>
+                </button>
+                <button onclick="event.stopPropagation(); deleteAccount('${escapeAttr(acc.account_id)}', '${escapeAttr(acc.display_label)}')" class="ba-skew-btn ba-btn-ghost px-2 py-1 text-[11px] font-semibold" style="color:#e11d48">
+                  <span>🗑</span>
+                </button>
+              </div>
+            </div>
+          </div>`;
+      }).join('');
     }
 
-    function renderUser(user) {
-      if (!user) return;
-      const st = document.getElementById('user-status-text');
-      st.innerText = '已认证 ☆';
-      st.style.color = 'var(--emerald)';
-      document.getElementById('user-info-card').classList.remove('hidden');
-      document.getElementById('user-name').innerText = user.name || user.nick || 'UOOC 用户';
-      document.getElementById('user-school').innerText = user.school_name || '高校学生';
-      document.getElementById('user-uid').innerText = 'UID: ' + user.id;
-      if (user.smallavatar) {
-        document.getElementById('user-avatar-box').innerHTML = `<img src="${escapeAttr(user.smallavatar)}" class="w-full h-full object-cover">`;
-      }
-    }
-
-    async function loadCourses() {
+    async function loadActiveAccountCourses() {
       const box = document.getElementById('course-list-container');
-      box.innerHTML = '<div class="text-center py-8 text-sub text-xs">正在从 UOOC 获取已选课程...</div>';
+      const badge = document.getElementById('course-count-badge');
+      if (!activeAccountId) {
+        badge.innerText = '0 门课程';
+        box.innerHTML = '<div class="col-span-full text-center py-10 text-mute text-xs">请先添加或选中一个 UOOC 账号...</div>';
+        return;
+      }
+      box.innerHTML = '<div class="col-span-full text-center py-8 text-sub text-xs">正在从 UOOC 获取当前账号课程...</div>';
       try {
-        const res = await fetch('/api/courses');
+        const res = await fetch(`/api/courses?account_id=${encodeURIComponent(activeAccountId)}`);
         const data = await res.json();
         if (data.code === 1 && data.courses && data.courses.length > 0) {
-          document.getElementById('course-count-badge').innerHTML = `<span>${data.courses.length}</span>`;
-          box.innerHTML = '';
-          data.courses.forEach(c => {
+          badge.innerText = `${data.courses.length} 门课程`;
+          box.innerHTML = data.courses.map(c => {
             const raw = c.raw || {};
             const testCnt = Number(raw.test_uncommit_cnt || 0);
             const hwCnt = Number(raw.homework_uncommit_cnt || 0);
@@ -835,89 +972,169 @@
               testCnt > 0 ? `<span class="text-[10px] font-bold px-1.5 py-0.5 rounded" style="background:rgba(234,179,8,0.18); color:var(--gold)">待做测验: ${testCnt}</span>` : '',
               hwCnt > 0 ? `<span class="text-[10px] font-bold px-1.5 py-0.5 rounded" style="background:rgba(225,29,72,0.16); color:var(--accent)">待交作业: ${hwCnt}</span>` : ''
             ].filter(Boolean).join(' ');
-
-            const card = document.createElement('div');
-            card.className = 'ba-card p-3.5 pl-5 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3';
-            card.innerHTML = `
-              <div class="flex items-center space-x-3 overflow-hidden">
-                <div class="w-12 h-12 rounded-xl ba-inner-box flex-shrink-0 overflow-hidden flex items-center justify-center text-xl">
-                  ${c.cover ? `<img src="${escapeAttr(c.cover)}" class="w-full h-full object-cover">` : '📖'}
-                </div>
-                <div class="overflow-hidden space-y-1">
-                  <div class="text-xs font-black text-main truncate">${escapeHtml(c.name)}</div>
-                  <div class="text-[11px] text-sub truncate">${escapeHtml(c.school || '')} ${c.teacher ? '· ' + escapeHtml(c.teacher) : ''}</div>
-                  <div class="flex flex-wrap items-center gap-1.5">
-                    <span class="text-[10px] font-bold font-mono" style="color:var(--accent)">视频进度: ${escapeHtml(c.progress || '0%')} ${c.weeks ? '· 第 ' + escapeHtml(c.weeks) + ' 周' : ''}</span>
-                    ${pendingBadges}
+            const finished = String(c.progress || '').trim() === '100%';
+            return `
+              <div class="ba-card p-4 pl-5 rounded-2xl flex flex-col justify-between space-y-3">
+                <div class="flex items-start gap-3">
+                  <input type="checkbox" class="course-checkbox mt-1 rounded accent-pink-500" value="${escapeAttr(c.cid)}" ${finished ? '' : 'checked'}>
+                  <div class="w-12 h-12 rounded-xl ba-inner-box flex-shrink-0 overflow-hidden flex items-center justify-center text-xl">
+                    ${c.cover ? `<img src="${escapeAttr(c.cover)}" class="w-full h-full object-cover" onerror="this.remove()">` : '📖'}
+                  </div>
+                  <div class="overflow-hidden space-y-1 flex-1">
+                    <div class="text-xs font-black text-main line-clamp-1" title="${escapeAttr(c.name)}">${escapeHtml(c.name)}</div>
+                    <div class="text-[11px] text-sub truncate">${escapeHtml(c.school || '')} ${c.teacher ? '· ' + escapeHtml(c.teacher) : ''}</div>
+                    <div class="flex flex-wrap items-center gap-1.5">
+                      <span class="text-[10px] font-bold font-mono" style="color:var(--accent)">进度: ${escapeHtml(c.progress || '0%')}</span>
+                      ${pendingBadges}
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div class="flex flex-wrap items-center gap-1.5 flex-shrink-0">
-                <button type="button" data-course="${escapeAttr(c.name)}" onclick="openAssistant(this.dataset.course, 'exercise')" class="ba-skew-btn ba-btn-ghost px-2 py-1 text-[11px] font-bold" style="color:var(--accent)">
-                  <span>🧠 解析</span>
-                </button>
-                <a href="https://www.uooc.net.cn/home/course/new/${c.cid}#/assessment" target="_blank" rel="noopener noreferrer" class="ba-skew-btn ba-btn-ghost px-2 py-1 text-[11px] font-semibold">
-                  <span>📝 测验</span>
-                </a>
-                <a href="https://www.uooc.net.cn/home/course/new/${c.cid}#/discuss" target="_blank" rel="noopener noreferrer" class="ba-skew-btn ba-btn-ghost px-2 py-1 text-[11px] font-semibold">
-                  <span>💬 讨论</span>
-                </a>
-                <a href="https://www.uooc.net.cn/home/learn/new/${c.cid}#/${c.cid}/go" target="_blank" rel="noopener noreferrer" class="ba-skew-btn ba-btn-ghost px-2 py-1 text-[11px] font-semibold">
-                  <span>📖 章节</span>
-                </a>
-                <button onclick="startSingleCourse(${c.cid})" class="ba-skew-btn ba-btn-mika px-3 py-1 text-xs font-bold">
-                  <span>▶ 刷此课</span>
-                </button>
-              </div>
-            `;
-            box.appendChild(card);
-          });
+                <div class="pt-2.5 flex flex-wrap items-center justify-between gap-2" style="border-top:1px solid var(--border-main)">
+                  <div class="flex flex-wrap items-center gap-1">
+                    <button type="button" data-course="${escapeAttr(c.name)}" onclick="openAssistant(this.dataset.course, 'exercise')" class="ba-skew-btn ba-btn-ghost px-2 py-1 text-[11px] font-bold" style="color:var(--accent)"><span>🧠 解析</span></button>
+                    <a href="https://www.uooc.net.cn/home/course/new/${c.cid}#/assessment" target="_blank" rel="noopener noreferrer" class="ba-skew-btn ba-btn-ghost px-2 py-1 text-[11px] font-semibold"><span>📝 测验</span></a>
+                    <a href="https://www.uooc.net.cn/home/course/new/${c.cid}#/discuss" target="_blank" rel="noopener noreferrer" class="ba-skew-btn ba-btn-ghost px-2 py-1 text-[11px] font-semibold"><span>💬 讨论</span></a>
+                    <a href="https://www.uooc.net.cn/home/learn/new/${c.cid}#/${c.cid}/go" target="_blank" rel="noopener noreferrer" class="ba-skew-btn ba-btn-ghost px-2 py-1 text-[11px] font-semibold"><span>📖 章节</span></a>
+                  </div>
+                  <button onclick="startSingleCourse(${Number(c.cid)})" class="ba-skew-btn ba-btn-mika px-3 py-1 text-xs font-bold"><span>▶ 刷此课</span></button>
+                </div>
+              </div>`;
+          }).join('');
         } else {
-          box.innerHTML = '<div class="text-center py-8 text-mute text-xs">暂无选定课程或未加入任何课程</div>';
+          badge.innerText = '0 门课程';
+          box.innerHTML = `<div class="col-span-full text-center py-8 text-mute text-xs">${escapeHtml(data.msg || '暂无选定课程')}</div>`;
         }
       } catch (e) {
-        box.innerHTML = `<div class="text-center py-8 text-xs" style="color:var(--accent)">加载失败: ${escapeHtml(e)}</div>`;
+        box.innerHTML = `<div class="col-span-full text-center py-8 text-xs" style="color:var(--accent)">加载失败: ${escapeHtml(e)}</div>`;
       }
     }
 
-    async function startAllCourses() {
-      const speed = parseFloat(document.getElementById('speed-slider').value);
-      const interval = parseInt(document.getElementById('interval-slider').value);
-      try {
-        const res = await fetch('/api/start', {
-          method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ speed, interval, cids: [] })
-        });
-        const data = await res.json();
-        showToast(data.msg, data.code === 1 ? 'ok' : 'err');
-      } catch (e) { showToast('启动失败: ' + e, 'err'); }
+    function toggleSelectAllCourses(checked) {
+      document.querySelectorAll('.course-checkbox').forEach(cb => cb.checked = checked);
+    }
+
+    async function startAllAccounts() {
+      const speed = parseFloat(document.getElementById('global-speed-select').value) || 1.5;
+      const interval = parseInt(document.getElementById('global-interval-select').value) || 15;
+      const res = await fetch('/api/start_all', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ speed, interval })
+      });
+      const data = await res.json();
+      showToast(data.msg || '已触发全部账号并发启动☆', data.ok ? 'ok' : 'err');
+      pollStatus();
+    }
+
+    async function pauseAllAccounts() {
+      const res = await fetch('/api/pause_all', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'toggle' })
+      });
+      const data = await res.json();
+      showToast(data.msg || '已切换全部暂停状态', 'warn');
+      pollStatus();
+    }
+
+    async function stopAllAccounts() {
+      if (!confirm('确定要停止所有 UOOC 账号的后台刷课任务吗？')) return;
+      const res = await fetch('/api/stop_all', { method: 'POST' });
+      const data = await res.json();
+      showToast(data.msg || '已发送全部停止指令', 'warn');
+      pollStatus();
+    }
+
+    async function startAccountAll(aid) {
+      const speed = parseFloat(document.getElementById('global-speed-select').value) || 1.5;
+      const interval = parseInt(document.getElementById('global-interval-select').value) || 15;
+      const res = await fetch('/api/start', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ account_id: aid, cids: [], speed, interval })
+      });
+      const data = await res.json();
+      showToast(data.msg, data.code === 1 ? 'ok' : 'err');
+      pollStatus();
+    }
+
+    async function startActiveSelectedCourses() {
+      if (!activeAccountId) return showToast('请先选中一个账号☆', 'warn');
+      const selected = Array.from(document.querySelectorAll('.course-checkbox:checked')).map(cb => Number(cb.value));
+      if (selected.length === 0 && !confirm('未勾选特定课程，是否刷该账号全部课程？')) return;
+      const speed = parseFloat(document.getElementById('global-speed-select').value) || 1.5;
+      const interval = parseInt(document.getElementById('global-interval-select').value) || 15;
+      const res = await fetch('/api/start', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ account_id: activeAccountId, cids: selected, speed, interval })
+      });
+      const data = await res.json();
+      showToast(data.msg, data.code === 1 ? 'ok' : 'err');
+      pollStatus();
     }
 
     async function startSingleCourse(cid) {
-      const speed = parseFloat(document.getElementById('speed-slider').value);
-      const interval = parseInt(document.getElementById('interval-slider').value);
-      try {
-        const res = await fetch('/api/start', {
-          method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ speed, interval, cids: [cid] })
-        });
-        const data = await res.json();
-        showToast(data.msg, data.code === 1 ? 'ok' : 'err');
-      } catch (e) { showToast('启动失败: ' + e, 'err'); }
+      if (!activeAccountId) return showToast('请先选中一个账号☆', 'warn');
+      const speed = parseFloat(document.getElementById('global-speed-select').value) || 1.5;
+      const interval = parseInt(document.getElementById('global-interval-select').value) || 15;
+      const res = await fetch('/api/start', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ account_id: activeAccountId, cids: [cid], speed, interval })
+      });
+      const data = await res.json();
+      showToast(data.msg, data.code === 1 ? 'ok' : 'err');
+      pollStatus();
     }
 
-    async function pauseTask() {
-      const res = await fetch('/api/pause', { method: 'POST' });
+    async function pauseAccount(aid) {
+      const res = await fetch('/api/pause', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ account_id: aid })
+      });
       const data = await res.json();
       showToast(data.msg || '状态已切换', 'warn');
       pollStatus();
     }
 
-    async function stopTask() {
-      if (!confirm('确定要停止当前正在运行的刷课任务吗？')) return;
-      const res = await fetch('/api/stop', { method: 'POST' });
+    async function stopAccount(aid) {
+      if (!confirm('确定要停止该账号的刷课任务吗？')) return;
+      const res = await fetch('/api/stop', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ account_id: aid })
+      });
       const data = await res.json();
       showToast(data.msg || '已发送停止指令', 'warn');
+      pollStatus();
+    }
+
+    async function editRemark(aid, oldVal) {
+      const val = prompt('请输入该账号的新备注名（留空则清除备注）：', oldVal);
+      if (val === null) return;
+      await fetch(`/api/accounts/${encodeURIComponent(aid)}/remark`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ remark: val })
+      });
+      showToast('账号备注已更新☆', 'ok');
+      pollStatus();
+    }
+
+    async function deleteAccount(aid, label) {
+      if (!confirm(`确定移除账号【${label}】吗？若正在运行会自动停止。`)) return;
+      await fetch(`/api/accounts/${encodeURIComponent(aid)}/delete`, { method: 'POST' });
+      if (activeAccountId === aid) activeAccountId = '';
+      showToast(`已移除账号 ${label}`, 'warn');
+      await pollStatus();
+      await loadActiveAccountCourses();
+    }
+
+    function setLogMode(mode) {
+      logMode = mode === 'single' ? 'single' : 'all';
+      const bAll = document.getElementById('log-mode-all');
+      const bSingle = document.getElementById('log-mode-single');
+      if (logMode === 'all') {
+        bAll.style.background = 'var(--accent)'; bAll.className = 'px-2.5 py-1 rounded-lg font-bold text-white transition';
+        bSingle.style.background = 'transparent'; bSingle.className = 'px-2.5 py-1 rounded-lg font-semibold text-sub transition';
+      } else {
+        bSingle.style.background = 'var(--accent)'; bSingle.className = 'px-2.5 py-1 rounded-lg font-bold text-white transition';
+        bAll.style.background = 'transparent'; bAll.className = 'px-2.5 py-1 rounded-lg font-semibold text-sub transition';
+      }
       pollStatus();
     }
 
@@ -925,63 +1142,58 @@
       document.getElementById('terminal-box').innerHTML = '<div class="text-pink-300/60">[已清空视图]</div>';
     }
 
-    function startPolling() {
-      pollStatus();
-      pollTimer = setInterval(pollStatus, 1500);
-    }
-
     async function pollStatus() {
       try {
-        const res = await fetch('/api/status');
+        const qs = activeAccountId ? `?account_id=${encodeURIComponent(activeAccountId)}` : '';
+        const res = await fetch('/api/status' + qs);
         const s = await res.json();
 
-        const pill = document.getElementById('runner-state-pill');
-        const speech = document.getElementById('mika-speech');
-        const bar = document.getElementById('active-progress-bar');
-
-        if (s.running) {
-          if (s.paused) {
-            pill.innerHTML = '<span>⏸ PAUSED · 已暂停</span>';
-            pill.style.background = 'var(--gold)'; pill.style.color = '#3b1933';
-            bar.classList.remove('is-running');
-            speech.innerText = `老师，优课任务暂时停下来啦，喝完红茶随时点继续哦☆`;
-          } else {
-            pill.innerHTML = `<span>⚡ ACTIVE · ${escapeHtml(s.current_course_name || '刷课中')}</span>`;
-            pill.style.background = 'linear-gradient(135deg,var(--accent),var(--accent-2))'; pill.style.color = '#fff';
-            bar.classList.add('is-running');
-            speech.innerText = `未花正在帮老师刷《${s.current_course_name || '当前课程'}》呢☆ 当前进度 ${(s.progress_percent || 0).toFixed(1)}%，完全没问题！`;
-          }
-          document.getElementById('btn-start-all').classList.add('opacity-50', 'pointer-events-none');
-        } else {
-          pill.innerHTML = '<span>STANDBY · 空闲中</span>';
-          pill.style.background = 'var(--card-inner)'; pill.style.color = 'var(--text-secondary)';
-          bar.classList.remove('is-running');
-          speech.innerText = `老师☆ 茶话会优课控制台待命中，选一门课或者一键开刷都可以交给我哦~`;
-          document.getElementById('btn-start-all').classList.remove('opacity-50', 'pointer-events-none');
+        accountsList = s.accounts || [];
+        const needInitialLoad = !activeAccountId && accountsList.length > 0;
+        if ((!activeAccountId || !accountsList.some(a => a.account_id === activeAccountId)) && accountsList.length > 0) {
+          activeAccountId = accountsList[0].account_id;
         }
 
-        document.getElementById('active-video-title').innerText = s.current_video_title || (s.running ? '定位章节中...' : '无运行中的任务');
-        const pos = s.current_pos ? s.current_pos.toFixed(1) : '0.0';
-        const dur = s.current_duration ? s.current_duration.toFixed(1) : '0.0';
-        const pct = s.progress_percent ? s.progress_percent.toFixed(1) : '0.0';
-        document.getElementById('active-video-time').innerText = `${pos}s / ${dur}s (${pct}%)`;
-        bar.style.width = pct + '%';
+        const total = s.total_accounts || 0;
+        const running = s.running_count || 0;
+        document.getElementById('global-summary-badge').innerHTML =
+          `<span class="ba-live-dot"></span><span>已接入 ${total} 个账号 · ${running} 个并发中</span>`;
 
-        if (s.logs && s.logs.length > 0) {
+        const activeObj = accountsList.find(a => a.account_id === activeAccountId);
+        document.getElementById('active-account-pill').innerHTML = `<span>${escapeHtml(activeObj ? activeObj.display_label : '未选中账号')}</span>`;
+
+        const speech = document.getElementById('mika-speech');
+        if (total === 0) {
+          speech.innerText = '老师☆ 点击右上角「➕ 添加新账号」粘贴 Cookie，就能让未花帮你多线程并发推进度啦~';
+        } else if (running > 0) {
+          const doneSum = accountsList.reduce((acc, a) => acc + ((a.stats && a.stats.completed_videos) || 0), 0);
+          speech.innerText = `未花正在并发守护 ${running}/${total} 个 UOOC 账号☆ 本轮已累计完成 ${doneSum} 个视频，老师安心去喝红茶吧~`;
+        } else {
+          speech.innerText = `老师☆ 当前已接入 ${total} 个 UOOC 账号，全部待命中！随时可以「全部同时开刷」哦~`;
+        }
+
+        renderAccountCards();
+        if (needInitialLoad) loadActiveAccountCourses();
+
+        const logs = logMode === 'single'
+          ? (s.active_account ? (s.active_account.logs || []) : [])
+          : (s.global_logs || []);
+        if (logs.length > 0) {
           const tBox = document.getElementById('terminal-box');
-          tBox.innerHTML = s.logs.map(l => {
+          tBox.innerHTML = logs.map(l => {
             let color = 'text-pink-100';
             if (l.level === 'SUCCESS') color = 'text-emerald-300 font-semibold';
             if (l.level === 'WARN') color = 'text-amber-300';
             if (l.level === 'ERROR') color = 'text-rose-400 font-semibold';
-            return `<div><span class="text-purple-400/70">[${l.time}]</span> <span class="${color}">${escapeHtml(l.msg)}</span></div>`;
+            const tag = l.account ? `<span class="text-pink-400 shrink-0 font-bold">[${escapeHtml(l.account)}]</span> ` : '';
+            return `<div><span class="text-purple-400/70">[${l.time}]</span> ${tag}<span class="${color}">${escapeHtml(l.msg)}</span></div>`;
           }).join('');
           if (document.getElementById('auto-scroll').checked) tBox.scrollTop = tBox.scrollHeight;
         }
       } catch (e) {}
     }
 
-    function refreshAll() { checkUser(); pollStatus(); }
+    function refreshAll() { pollStatus(); loadActiveAccountCourses(); }
 
     /* --- Shared Study Assistant --- */
     const AI_PRESETS = {
@@ -1112,13 +1324,20 @@
       navigator.clipboard.writeText(lastAnalysisText).then(() => showToast('已复制到剪贴板 ☆', 'ok'));
     }
 
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeAssistant(); });
-    window.onload = init;
-  
     function openPlatform(port) {
       const url = `${window.location.protocol}//${window.location.hostname}:${port}`;
       window.open(url, '_blank', 'noopener');
     }
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') { closeAssistant(); closeAddAccountModal(); }
+    });
+
+    window.onload = async () => {
+      applyTheme(localStorage.getItem('ba_uooc_theme') || 'mika-day');
+      await pollStatus();
+      pollTimer = setInterval(pollStatus, 1800);
+    };
   </script>
 </body>
 </html>

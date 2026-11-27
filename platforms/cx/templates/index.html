@@ -35,8 +35,10 @@
       --term-border: rgba(18, 138, 250, 0.35);
       --input-bg: rgba(255, 255, 255, 0.95);
       --input-border: rgba(18, 138, 250, 0.28);
-      --halo-ring: #128afa;
-      --halo-inner: #38d9ff;
+      --halo-ring: #29b6f6;
+      --halo-inner: #81d4fa;
+      --halo-core: #ffffff;
+      --halo-band: #0288d1;
       --particle-rgb: 18, 138, 250;
     }
 
@@ -66,10 +68,18 @@
       --term-border: rgba(56, 189, 248, 0.32);
       --input-bg: rgba(11, 18, 36, 0.92);
       --input-border: rgba(148, 163, 184, 0.28);
-      --halo-ring: #f472b6;
-      --halo-inner: #38bdf8;
+      --halo-ring: #f43f5e;
+      --halo-inner: #fda4af;
+      --halo-core: #1e1b2e;
+      --halo-band: #0f172a;
       --particle-rgb: 244, 114, 182;
     }
+
+    html[data-theme="arona"] .persona-plana { opacity: 0; pointer-events: none; }
+    html[data-theme="arona"] .persona-arona { opacity: 1; }
+    html[data-theme="plana"] .persona-arona { opacity: 0; pointer-events: none; }
+    html[data-theme="plana"] .persona-plana { opacity: 1; }
+    .persona-arona, .persona-plana { transition: opacity 0.35s ease; }
 
     * { box-sizing: border-box; }
 
@@ -449,20 +459,35 @@
   <!-- Top Navigation Header -->
   <header class="ba-layer ba-glass sticky top-0 z-40 px-4 sm:px-6 py-3.5 border-b">
     <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
-      <!-- Brand + Animated Blue Archive Halo -->
+      <!-- Brand + Canonical Arona / Plana Luminous Concentric Halo SVG -->
       <div class="flex items-center gap-3.5">
-        <div class="relative w-11 h-11 flex items-center justify-center flex-shrink-0 halo-bob">
-          <svg viewBox="0 0 64 64" class="w-11 h-11 drop-shadow">
-            <g class="halo-spin">
-              <circle cx="32" cy="32" r="27" fill="none" stroke="var(--halo-ring)" stroke-width="2.2" stroke-dasharray="14 6 4 6" opacity="0.9"/>
-              <polygon points="32,1 35,7 32,10 29,7" fill="var(--halo-inner)"/>
-              <polygon points="32,63 35,57 32,54 29,57" fill="var(--halo-inner)"/>
+        <div class="relative w-12 h-12 flex items-center justify-center flex-shrink-0 halo-bob" title="阿罗娜(晴空双蓝环) / 普拉娜(暗黑绯红环) · 什亭之匣光环">
+          <svg viewBox="0 0 64 64" class="w-12 h-12">
+            <defs>
+              <filter id="aronaHaloGlow" x="-35%" y="-35%" width="170%" height="170%">
+                <feGaussianBlur stdDeviation="2.1" result="blur"/>
+                <feMerge>
+                  <feMergeNode in="blur"/>
+                  <feMergeNode in="SourceGraphic"/>
+                </feMerge>
+              </filter>
+            </defs>
+            <!-- Arona Canonical Luminous Sky-Blue Double Ring Halo -->
+            <g class="persona-arona" filter="url(#aronaHaloGlow)">
+              <circle cx="32" cy="32" r="24" fill="none" stroke="#38bdf8" stroke-width="5.2" opacity="0.32"/>
+              <circle cx="32" cy="32" r="24" fill="none" stroke="#128afa" stroke-width="3.4"/>
+              <circle cx="32" cy="32" r="24" fill="none" stroke="#e0f7ff" stroke-width="1.3"/>
+              <circle cx="32" cy="32" r="15.5" fill="none" stroke="#38bdf8" stroke-width="2.1" opacity="0.92"/>
+              <circle cx="32" cy="32" r="15.5" fill="none" stroke="#ffffff" stroke-width="0.7" opacity="0.85"/>
             </g>
-            <g class="halo-spin-rev">
-              <circle cx="32" cy="32" r="19" fill="none" stroke="var(--halo-inner)" stroke-width="2" stroke-dasharray="22 8" opacity="0.85"/>
+            <!-- Plana Canonical Dark-Obsidian & Glowing Crimson-Pink Mirror Halo -->
+            <g class="persona-plana" filter="url(#aronaHaloGlow)">
+              <circle cx="32" cy="32" r="24" fill="none" stroke="#f43f5e" stroke-width="5.4" opacity="0.45"/>
+              <circle cx="32" cy="32" r="24" fill="none" stroke="#181826" stroke-width="3.6"/>
+              <circle cx="32" cy="32" r="24" fill="none" stroke="#fda4af" stroke-width="1.15" opacity="0.95"/>
+              <circle cx="32" cy="32" r="15.5" fill="none" stroke="#fb7185" stroke-width="2.0" opacity="0.9"/>
+              <circle cx="32" cy="32" r="15.5" fill="none" stroke="#181826" stroke-width="0.9" opacity="0.85"/>
             </g>
-            <circle cx="32" cy="32" r="11" fill="var(--accent)" opacity="0.16"/>
-            <text x="32" y="37" text-anchor="middle" font-size="14" font-weight="900" fill="var(--accent)">通</text>
           </svg>
         </div>
 
@@ -513,12 +538,44 @@
       <!-- Left: Shittim Chest AI Speech Status -->
       <div class="flex items-center gap-3.5">
         <div class="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 relative" style="background:var(--accent-soft); border:1.5px solid var(--border-strong)">
-          <svg viewBox="0 0 48 48" class="w-9 h-9">
-            <ellipse cx="24" cy="11" rx="14" ry="4.5" fill="none" stroke="var(--halo-ring)" stroke-width="2.4" class="halo-bob"/>
-            <circle cx="24" cy="27" r="11" fill="var(--accent)" opacity="0.22"/>
-            <circle cx="20" cy="26" r="1.8" fill="var(--accent)"/>
-            <circle cx="28" cy="26" r="1.8" fill="var(--accent)"/>
-            <path d="M20.5 31 Q24 34 27.5 31" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"/>
+          <!-- Minimalist Arona (Sky-Blue Bob + Hairclip) ⇄ Plana (Silver-White Mirror Bob + Dark Ribbon) Emblem -->
+          <svg viewBox="0 0 64 64" class="w-10 h-10">
+            <!-- Arona Persona -->
+            <g class="persona-arona">
+              <ellipse cx="32" cy="11" rx="15" ry="4.2" fill="none" stroke="#128afa" stroke-width="2.6" class="halo-bob"/>
+              <ellipse cx="32" cy="11" rx="9.5" ry="2.4" fill="none" stroke="#7dd3fc" stroke-width="1.3" class="halo-bob"/>
+              <!-- Sky-blue bob silhouette -->
+              <path d="M18 35 C18 22 24 18 32 18 C40 18 46 22 46 35 L48 49 C44 47 42 45 41 42 L23 42 C22 45 20 47 16 49 Z" fill="#38bdf8"/>
+              <!-- Face & bangs -->
+              <circle cx="32" cy="35" r="10.5" fill="#fff5f0"/>
+              <path d="M21 31 Q26 22 33 23 Q39 23 43 31 Q37 28 31 30 Q26 27 21 31 Z" fill="#128afa"/>
+              <!-- Arona iconic white/blue ribbon hairclip on left -->
+              <rect x="20" y="24" width="6.5" height="2.6" rx="1.2" transform="rotate(-18 23 25)" fill="#ffffff" stroke="#0284c7" stroke-width="0.8"/>
+              <!-- Cute eyes & smile -->
+              <circle cx="28" cy="36" r="1.7" fill="#0284c7"/>
+              <circle cx="36" cy="36" r="1.7" fill="#0284c7"/>
+              <path d="M29.5 40.5 Q32 43 34.5 40.5" fill="none" stroke="#128afa" stroke-width="1.6" stroke-linecap="round"/>
+              <!-- Sailor collar tie -->
+              <polygon points="32,46 28,53 32,56 36,53" fill="#0ea5e9"/>
+            </g>
+            <!-- Plana Persona (Mirrored bangs, silver-white hair, dark-crimson halo) -->
+            <g class="persona-plana">
+              <ellipse cx="32" cy="11" rx="15" ry="4.2" fill="none" stroke="#f43f5e" stroke-width="2.6" class="halo-bob"/>
+              <ellipse cx="32" cy="11" rx="9.5" ry="2.4" fill="none" stroke="#1e1b2e" stroke-width="1.4" class="halo-bob"/>
+              <!-- Silver-white bob silhouette -->
+              <path d="M18 35 C18 22 24 18 32 18 C40 18 46 22 46 35 L48 49 C44 47 42 45 41 42 L23 42 C22 45 20 47 16 49 Z" fill="#e2e8f0"/>
+              <!-- Face & mirrored bangs -->
+              <circle cx="32" cy="35" r="10.5" fill="#fff5f7"/>
+              <path d="M21 31 Q25 23 31 23 Q38 22 43 31 Q38 27 33 30 Q27 28 21 31 Z" fill="#cbd5e1"/>
+              <!-- Plana dark-pink hairclip on mirrored right -->
+              <rect x="37.5" y="24" width="6.5" height="2.6" rx="1.2" transform="rotate(18 40 25)" fill="#1e1b2e" stroke="#f43f5e" stroke-width="0.9"/>
+              <!-- Calm crimson eyes -->
+              <circle cx="28" cy="36" r="1.7" fill="#f43f5e"/>
+              <circle cx="36" cy="36" r="1.7" fill="#f43f5e"/>
+              <path d="M30 41 L34 41" fill="none" stroke="#94a3b8" stroke-width="1.6" stroke-linecap="round"/>
+              <!-- Dark tie -->
+              <polygon points="32,46 28,53 32,56 36,53" fill="#1e1b2e" stroke="#f43f5e" stroke-width="0.8"/>
+            </g>
           </svg>
         </div>
         <div class="space-y-1">

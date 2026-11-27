@@ -9,7 +9,7 @@
 [![Python](https://img.shields.io/badge/Python-3.10%2B-3776ab?style=flat-square&logo=python&logoColor=white)](requirements.txt)
 [![Platforms](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux%20%7C%20Docker-6366f1?style=flat-square)](#deploy)
 
-整合 **超星学习通（多账号并发）** · **UOOC 优课在线** · **知道智慧树**<br/>
+整合 **超星学习通** · **UOOC 优课在线** · **知道智慧树**（三平台均支持**多账号独立线程并发**）<br/>
 支持 **Windows 独立桌面端（免安装 Python/FFmpeg）** 与 **Linux / Docker / 软路由后台常驻**
 
 [📦 下载发行版](https://github.com/ACM416/schale-course-suite/releases/latest) · [✨ 功能说明](#features) · [🚀 快速部署](#deploy) · [⚙️ 参数配置](#config) · [❓ 常见问题](#faq)
@@ -34,8 +34,8 @@
 | 平台 | 默认端口 | 登录方式 | 核心功能 |
 | :--- | :---: | :--- | :--- |
 | **超星学习通** | `51092` | 扫码 / 账号密码 / Cookie | **多账号独立线程并发运行**、全部账号批量启动/暂停/停止、视频/音频/文档/阅读进度上报、`enc` 动态签名、自动跳过评分测验并标注待办入口 |
-| **UOOC 优课在线** | `51088` | Cookie 持久化 | 课程章节自动进度上报、时间步进防拖拽退避（异常自动降速 1.25x / 1.0x）、纯 Python 视频时长探测（解析 MP4 `mvhd` 与 HLS `.m3u8`，无需 `ffmpeg`）、未完成测验/作业数量提醒 |
-| **知道智慧树** | `51089` | 扫码 / Cookie 导入 | 支持共享学分课（Zhidao）与校内学分课（Hike）、WatchPoint AES 加密上报、随堂弹题处理、倍速与拟人微休控制 |
+| **UOOC 优课在线** | `51088` | 多账号 Cookie 池 | **多账号独立线程并发**、批量全部启停、时间步进防拖拽退避（异常自动降速 1.25x / 1.0x）、纯 Python 视频时长探测（解析 MP4 `mvhd` 与 HLS `.m3u8`，无需 `ffmpeg`）、未完成测验/作业数量提醒 |
+| **知道智慧树** | `51089` | 多账号扫码 / Cookie | **多账号独立线程并发**（线程隔离进度/日志/启停）、支持共享学分课（Zhidao）与校内学分课（Hike）、WatchPoint AES 加密上报、随堂弹题处理与拟人微休 |
 
 ### 2. 通用功能
 
@@ -151,8 +151,8 @@ python3 server.py --only cx --cx-port 51092 --data-dir /var/lib/schale-data
 ```text
 data/
 ├── cx_accounts.json        # 超星学习通多账号会话与 Cookie
-├── uooc_config.json        # UOOC Cookie 与倍速/上报间隔配置
-├── zhs_cookies.json        # 智慧树 Cookie
+├── uooc_accounts.json      # UOOC 多账号会话与倍速/间隔配置（自动兼容迁移旧版 uooc_config.json）
+├── zhs_accounts.json       # 智慧树多账号会话与 Cookie（自动兼容迁移旧版 zhs_cookies.json）
 ├── shared_ai_config.json   # 三平台共享的 AI API 配置
 ├── zhs_logs/               # 智慧树运行日志
 └── suite.log / suite.pid   # Linux daemon 日志与进程 PID

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MILLENNIUM GDD // 知道智慧树控制台 · 才羽绿 & 才羽桃井</title>
+  <title>MILLENNIUM GDD // 知道智慧树多账号控制台 · 才羽绿 & 才羽桃井</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     /* ============================================================
@@ -34,8 +34,9 @@
       --term-border: rgba(16, 185, 129, 0.38);
       --input-bg: rgba(255, 255, 255, 0.96);
       --input-border: rgba(16, 185, 129, 0.30);
-      --halo-ring: #10b981;
-      --halo-inner: #fb7185;
+      --halo-main: #4ade80;
+      --halo-stroke: #10b981;
+      --halo-core: #bbf7d0;
       --particle-rgb: 16, 185, 129;
       --pixel2-rgb: 251, 113, 133;
     }
@@ -44,32 +45,40 @@
       --bg-grad-1: #061714;
       --bg-grad-2: #0c1f1c;
       --bg-grad-3: #1a0f1c;
-      --grid-line: rgba(52, 211, 153, 0.08);
-      --glass-bg: rgba(11, 29, 26, 0.84);
-      --glass-strong: rgba(14, 34, 31, 0.95);
-      --card-bg: rgba(15, 39, 34, 0.80);
-      --card-inner: rgba(8, 22, 20, 0.82);
-      --border-main: rgba(52, 211, 153, 0.25);
-      --border-strong: rgba(251, 113, 133, 0.58);
-      --text-primary: #ecfdf5;
-      --text-secondary: #a7f3d0;
-      --text-muted: #6ee7b7;
-      --accent: #34d399;
-      --accent-2: #fb7185;
-      --momoi: #fb7185;
+      --grid-line: rgba(251, 113, 133, 0.08);
+      --glass-bg: rgba(18, 22, 32, 0.84);
+      --glass-strong: rgba(22, 25, 38, 0.95);
+      --card-bg: rgba(24, 29, 42, 0.82);
+      --card-inner: rgba(14, 17, 27, 0.84);
+      --border-main: rgba(251, 113, 133, 0.25);
+      --border-strong: rgba(251, 113, 133, 0.62);
+      --text-primary: #fff1f5;
+      --text-secondary: #fecdd3;
+      --text-muted: #fda4af;
+      --accent: #fb7185;
+      --accent-2: #34d399;
+      --momoi: #f43f5e;
       --accent-soft: rgba(251, 113, 133, 0.16);
-      --accent-glow: rgba(52, 211, 153, 0.30);
+      --accent-glow: rgba(251, 113, 133, 0.34);
       --gold: #fbbf24;
-      --shadow-card: 0 14px 36px -8px rgba(0, 0, 0, 0.58), 0 0 18px rgba(52, 211, 153, 0.10);
-      --term-bg: #030e0c;
-      --term-border: rgba(52, 211, 153, 0.35);
-      --input-bg: rgba(8, 22, 20, 0.94);
-      --input-border: rgba(52, 211, 153, 0.30);
-      --halo-ring: #fb7185;
-      --halo-inner: #34d399;
-      --particle-rgb: 52, 211, 153;
-      --pixel2-rgb: 251, 113, 133;
+      --shadow-card: 0 14px 36px -8px rgba(0, 0, 0, 0.58), 0 0 18px rgba(251, 113, 133, 0.12);
+      --term-bg: #080912;
+      --term-border: rgba(251, 113, 133, 0.35);
+      --input-bg: rgba(14, 17, 27, 0.94);
+      --input-border: rgba(251, 113, 133, 0.30);
+      --halo-main: #fda4af;
+      --halo-stroke: #fb7185;
+      --halo-core: #ffe4e6;
+      --particle-rgb: 251, 113, 133;
+      --pixel2-rgb: 52, 211, 153;
     }
+
+    /* Authentic Midori (concave curved kite) vs Momoi (sharp diamond) Halo Reticle Switching */
+    html[data-theme="midori"] .halo-momoi-fins { opacity: 0; pointer-events: none; }
+    html[data-theme="midori"] .halo-midori-fins { opacity: 1; }
+    html[data-theme="momoi"] .halo-midori-fins { opacity: 0; pointer-events: none; }
+    html[data-theme="momoi"] .halo-momoi-fins { opacity: 1; }
+    .halo-midori-fins, .halo-momoi-fins { transition: opacity 0.35s ease; }
 
     * { box-sizing: border-box; }
 
@@ -82,7 +91,6 @@
       transition: background 0.45s ease, color 0.35s ease;
     }
 
-    /* Millennium Pixel Circuit Grid */
     .ba-bg-grid {
       position: fixed; inset: 0; z-index: 0; pointer-events: none;
       background-image:
@@ -131,6 +139,14 @@
       border-color: var(--border-strong);
       box-shadow: 0 18px 34px -10px var(--accent-glow);
     }
+    .ba-card.is-active {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px var(--accent), 0 18px 38px -10px var(--accent-glow);
+    }
+    .ba-card.is-active::before {
+      width: 6px; opacity: 1;
+      background: linear-gradient(180deg, var(--accent), var(--gold));
+    }
 
     .ba-inner-box { background: var(--card-inner); border: 1px solid var(--border-main); }
 
@@ -160,11 +176,9 @@
     .ba-skew-tag { display: inline-flex; align-items: center; transform: skewX(-12deg); border-radius: 5px; }
     .ba-skew-tag > span { transform: skewX(12deg); display: inline-flex; align-items: center; gap: 4px; }
 
-    .halo-spin { animation: spinSlow 15s linear infinite; transform-origin: center; }
-    .halo-spin-rev { animation: spinRev 10s linear infinite; transform-origin: center; }
+    .halo-spin { animation: spinSlow 24s linear infinite; transform-origin: 32px 32px; }
     .halo-bob { animation: haloBob 2.8s ease-in-out infinite; }
     @keyframes spinSlow { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-    @keyframes spinRev { from { transform: rotate(360deg); } to { transform: rotate(0deg); } }
     @keyframes haloBob { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-4px); } }
 
     .ba-progress-track {
@@ -183,7 +197,6 @@
     }
     @keyframes stripeMove { from { background-position: 0 0; } to { background-position: 28px 0; } }
 
-    /* Pixel Tap Burst (GDD Arcade FX!) */
     .ba-tap-ring {
       position: fixed; pointer-events: none; z-index: 9999;
       width: 14px; height: 14px; margin-left: -7px; margin-top: -7px;
@@ -255,40 +268,78 @@
   <header class="ba-layer ba-glass sticky top-0 z-40 px-4 sm:px-6 py-3.5 border-b">
     <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
       <div class="flex items-center gap-3.5">
-        <!-- GDD Midori/Momoi Pixel Halo SVG -->
-        <div class="relative w-11 h-11 flex items-center justify-center flex-shrink-0 halo-bob">
-          <svg viewBox="0 0 64 64" class="w-11 h-11 drop-shadow">
-            <g class="halo-spin">
-              <polygon points="32,4 56,18 56,46 32,60 8,46 8,18" fill="none" stroke="var(--halo-ring)" stroke-width="2.2" stroke-dasharray="14 5" opacity="0.92"/>
-              <rect x="29" y="1" width="6" height="6" rx="1" fill="var(--halo-inner)"/>
-              <rect x="29" y="57" width="6" height="6" rx="1" fill="var(--halo-inner)"/>
+        <!-- Canonical Saiba Midori & Saiba Momoi Twin Concentric Reticle Halo SVG -->
+        <div class="relative w-12 h-12 flex items-center justify-center flex-shrink-0 halo-bob" title="才羽绿(内凹曲边筝形准星) / 才羽桃井(菱形准星) 双胞胎光环">
+          <svg viewBox="0 0 64 64" class="w-12 h-12">
+            <defs>
+              <filter id="gddHaloGlow" x="-30%" y="-30%" width="160%" height="160%">
+                <feGaussianBlur stdDeviation="1.3" result="blur"/>
+                <feMerge>
+                  <feMergeNode in="blur"/>
+                  <feMergeNode in="SourceGraphic"/>
+                </feMerge>
+              </filter>
+            </defs>
+            <g filter="url(#gddHaloGlow)" class="halo-spin">
+              <!-- Outer & Inner Concentric Solid Rings (双同心圆环) -->
+              <circle cx="32" cy="32" r="23.5" fill="none" stroke="var(--halo-stroke)" stroke-width="2.6"/>
+              <circle cx="32" cy="32" r="23.5" fill="none" stroke="var(--halo-core)" stroke-width="0.9" opacity="0.85"/>
+              <circle cx="32" cy="32" r="14.2" fill="none" stroke="var(--halo-main)" stroke-width="2.0" opacity="0.95"/>
+
+              <!-- Midori: 4 Cardinal Concave Curved Kites (才羽绿: 外层四向内凹曲边筝形向内延伸) -->
+              <g class="halo-midori-fins" fill="var(--halo-main)" stroke="var(--halo-stroke)" stroke-width="1">
+                <!-- Top -->
+                <path d="M32 3 Q34 9.5 36.8 11.5 Q33.5 14 32 22.5 Q30.5 14 27.2 11.5 Q30 9.5 32 3 Z"/>
+                <!-- Bottom -->
+                <path d="M32 61 Q34 54.5 36.8 52.5 Q33.5 50 32 41.5 Q30.5 50 27.2 52.5 Q30 54.5 32 61 Z"/>
+                <!-- Left -->
+                <path d="M3 32 Q9.5 30 11.5 27.2 Q14 30.5 22.5 32 Q14 33.5 11.5 36.8 Q9.5 34 3 32 Z"/>
+                <!-- Right -->
+                <path d="M61 32 Q54.5 30 52.5 27.2 Q50 30.5 41.5 32 Q50 33.5 52.5 36.8 Q54.5 34 61 32 Z"/>
+              </g>
+
+              <!-- Momoi: 4 Cardinal Sharp Diamonds (才羽桃井: 外层四向菱形向内延伸) -->
+              <g class="halo-momoi-fins" fill="var(--halo-main)" stroke="var(--halo-stroke)" stroke-width="1">
+                <!-- Top -->
+                <polygon points="32,3 36.6,11.5 32,22.5 27.4,11.5"/>
+                <!-- Bottom -->
+                <polygon points="32,61 36.6,52.5 32,41.5 27.4,52.5"/>
+                <!-- Left -->
+                <polygon points="3,32 11.5,27.4 22.5,32 11.5,36.6"/>
+                <!-- Right -->
+                <polygon points="61,32 52.5,27.4 41.5,32 52.5,36.6"/>
+              </g>
             </g>
-            <g class="halo-spin-rev">
-              <circle cx="32" cy="32" r="18" fill="none" stroke="var(--accent-2)" stroke-width="1.8" stroke-dasharray="12 6" opacity="0.85"/>
-            </g>
-            <rect x="21" y="21" width="22" height="22" rx="6" fill="var(--accent)" opacity="0.16"/>
-            <text x="32" y="37" text-anchor="middle" font-size="14" font-weight="900" fill="var(--accent)">树</text>
+            <!-- Subtle Reticle Center Sight Dot -->
+            <circle cx="32" cy="32" r="2.1" fill="var(--halo-core)" stroke="var(--halo-stroke)" stroke-width="0.9"/>
           </svg>
         </div>
 
         <div>
           <div class="flex flex-wrap items-center gap-2">
             <span class="text-base sm:text-lg font-black tracking-tight text-main">
-              MILLENNIUM <span style="color:var(--accent)">//</span> 知道智慧树控制台
+              MILLENNIUM <span style="color:var(--accent)">//</span> 知道智慧树多账号控制台
             </span>
             <span class="ba-skew-tag px-2 py-0.5 text-[10px] font-bold text-white" style="background:linear-gradient(135deg,#10b981,#fb7185)">
               <span>GDD · 小绿 & 小桃</span>
             </span>
           </div>
-          <p class="text-[11px] text-sub mt-0.5">S.C.H.A.L.E. Open-Source Suite · Port 51089 · 共享/校内双通关</p>
+          <p class="text-[11px] text-sub mt-0.5 flex items-center gap-2">
+            <span>独立多线程并发引擎</span>
+            <span class="opacity-40">|</span>
+            <span>共享学分课 · 校内学分课 · WatchPoint AES</span>
+          </p>
         </div>
       </div>
 
       <div class="flex flex-wrap items-center gap-2">
-        <button onclick="toggleTheme()" class="ba-skew-btn ba-btn-ghost px-3 py-1.5 text-xs font-bold">
+        <button onclick="toggleTheme()" class="ba-skew-btn ba-btn-ghost px-3 py-1.5 text-xs font-bold" title="切换才羽绿(翠绿准星) / 才羽桃井(桃粉准星)">
           <span id="theme-label">🎮 小绿翠绿电玩</span>
         </button>
-        <button onclick="openAssistant('', 'exercise')" class="ba-skew-btn ba-btn-gdd px-3.5 py-1.5 text-xs font-bold">
+        <button onclick="openAddAccountModal()" class="ba-skew-btn ba-btn-gdd px-3.5 py-1.5 text-xs font-bold">
+          <span>➕ 添加新账号</span>
+        </button>
+        <button onclick="openAssistant('', 'exercise')" class="ba-skew-btn ba-btn-momoi px-3.5 py-1.5 text-xs font-bold">
           <span>🧠 联网解析助手</span>
         </button>
         <a href="javascript:void(0)" onclick="openPlatform(51088)" class="ba-skew-btn ba-btn-ghost px-2.5 py-1.5 text-xs font-semibold">
@@ -305,211 +356,142 @@
   </header>
 
   <main class="ba-layer max-w-7xl mx-auto px-4 sm:px-6 pt-6 space-y-6">
-    <!-- GDD Twin Broadcast Strip -->
-    <div class="ba-glass rounded-2xl p-4 sm:p-5 flex flex-wrap items-center justify-between gap-4">
+    <!-- GDD Twin Broadcast Strip + Global Batch Controls -->
+    <div class="ba-glass rounded-2xl p-5 flex flex-col lg:flex-row lg:items-center justify-between gap-4 relative overflow-hidden">
       <div class="flex items-center gap-3.5">
+        <!-- GDD Twin Cat-Ear Gaming Headset + Mini Crosshair Halo Emblem -->
         <div class="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0" style="background:var(--accent-soft); border:1.5px solid var(--border-strong)">
-          <svg viewBox="0 0 48 48" class="w-9 h-9">
-            <rect x="11" y="6" width="26" height="6" rx="3" fill="none" stroke="var(--halo-ring)" stroke-width="2.2" class="halo-bob"/>
-            <rect x="12" y="18" width="24" height="20" rx="7" fill="var(--accent)" opacity="0.22"/>
-            <rect x="17" y="25" width="3.5" height="3.5" rx="1" fill="var(--accent)"/>
-            <rect x="27.5" y="25" width="3.5" height="3.5" rx="1" fill="var(--momoi)"/>
-            <path d="M20 32.5 Q24 35.5 28 32.5" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"/>
+          <svg viewBox="0 0 64 64" class="w-10 h-10">
+            <!-- Mini floating twin reticle halo -->
+            <g class="halo-bob">
+              <ellipse cx="32" cy="11" rx="14" ry="4" fill="none" stroke="var(--halo-stroke)" stroke-width="2"/>
+              <line x1="32" y1="5" x2="32" y2="9.5" stroke="var(--halo-main)" stroke-width="1.8"/>
+              <line x1="32" y1="12.5" x2="32" y2="17" stroke="var(--halo-main)" stroke-width="1.8"/>
+              <line x1="15" y1="11" x2="21" y2="11" stroke="var(--halo-main)" stroke-width="1.8"/>
+              <line x1="43" y1="11" x2="49" y2="11" stroke="var(--halo-main)" stroke-width="1.8"/>
+            </g>
+            <!-- Twin Cat-Ear Gaming Headphones (Midori green left ear / Momoi pink right ear) -->
+            <path d="M16 38 A16 16 0 0 1 48 38" fill="none" stroke="var(--text-primary)" stroke-width="3.6" stroke-linecap="round"/>
+            <!-- Cat ears on headband -->
+            <polygon points="18,27 21,17 28,23" fill="#10b981" stroke="#064e3b" stroke-width="1.2" stroke-linejoin="round"/>
+            <polygon points="46,27 43,17 36,23" fill="#fb7185" stroke="#881337" stroke-width="1.2" stroke-linejoin="round"/>
+            <!-- Ear cups -->
+            <rect x="11" y="34" width="8.5" height="16" rx="4" fill="#10b981"/>
+            <rect x="44.5" y="34" width="8.5" height="16" rx="4" fill="#fb7185"/>
+            <!-- Retro D-pad & A/B accent inside -->
+            <path d="M26 42 H31 M28.5 39.5 V44.5" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="37.5" cy="40.5" r="1.7" fill="#fb7185"/>
+            <circle cx="35" cy="43.5" r="1.7" fill="#10b981"/>
           </svg>
         </div>
         <div class="space-y-1">
           <div class="flex flex-wrap items-center gap-2">
-            <span id="gdd-persona-tag" class="ba-skew-tag px-2 py-0.5 text-[10px] font-black text-white" style="background:linear-gradient(135deg,#10b981,#06b6d4)">
-              <span>MIDORI & MOMOI · 游戏开发部</span>
+            <span id="gdd-persona-tag" class="ba-skew-tag px-2 py-0.5 text-[10px] font-black text-white" style="background:linear-gradient(135deg,#10b981,#fb7185)">
+              <span>MIDORI & MOMOI · 双人联机</span>
             </span>
-            <span id="system-badge" class="text-xs font-bold px-2.5 py-0.5 rounded-full ba-inner-box text-main flex items-center gap-1.5">
+            <span id="global-summary-badge" class="text-xs font-bold px-2.5 py-0.5 rounded-full ba-inner-box text-main flex items-center gap-1.5">
               <span class="ba-live-dot"></span>
-              <span>PLAYER 1 READY</span>
+              <span>已接入 0 个账号 · 0 个并发中</span>
             </span>
           </div>
           <p id="gdd-speech" class="text-xs sm:text-sm font-medium text-sub">
-            小绿：老师！智慧树副本引擎已装载完毕，扫码登录就能自动挂机通关啦~ 小桃：冲呀冲呀！
+            小绿：老师！智慧树多账号联机引擎已启动，点击右上角即可添加多个账号并发通关~ 小桃：全员出击！
           </p>
         </div>
       </div>
 
-      <span id="task-badge" class="ba-skew-tag px-3 py-1 text-xs font-black ba-inner-box text-sub">
-        <span>STANDBY · 待命中</span>
-      </span>
-    </div>
-
-    <!-- Top Grid: Auth & Mission Monitor -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      <!-- Auth Card -->
-      <div class="ba-glass rounded-2xl p-6 lg:col-span-1 flex flex-col justify-between">
-        <div>
-          <div class="flex items-center justify-between mb-4 pb-2" style="border-bottom:1px solid var(--border-main)">
-            <h2 class="text-sm font-black text-main tracking-wider">🔑 登录认证与凭证</h2>
-            <span id="user-status-text" class="text-xs font-bold text-mute">检查中...</span>
-          </div>
-
-          <div class="flex gap-2 mb-4 ba-inner-box p-1 rounded-xl">
-            <button id="tab-qr-btn" onclick="switchTab('qr')" class="flex-1 py-1.5 text-xs font-bold rounded-lg text-white shadow transition" style="background:var(--accent)">
-              📱 扫码一键登录
-            </button>
-            <button id="tab-cookie-btn" onclick="switchTab('cookie')" class="flex-1 py-1.5 text-xs font-semibold rounded-lg text-sub transition">
-              🍪 粘贴 Cookie
-            </button>
-          </div>
-
-          <!-- QR Tab -->
-          <div id="tab-qr" class="space-y-3">
-            <div class="flex flex-col items-center justify-center p-4 ba-inner-box rounded-xl min-h-[220px]">
-              <div id="qr-placeholder" class="text-center space-y-3">
-                <div class="w-14 h-14 mx-auto rounded-2xl flex items-center justify-center text-3xl" style="background:var(--accent-soft)">📱</div>
-                <p class="text-xs text-sub">使用知道智慧树 APP 或微信扫码</p>
-                <button onclick="fetchQrCode()" class="ba-skew-btn ba-btn-gdd px-4 py-2 text-xs font-bold">
-                  <span>获取智慧树登录二维码</span>
-                </button>
-              </div>
-              <div id="qr-display" class="hidden flex-col items-center space-y-2.5">
-                <div class="p-2.5 bg-white rounded-2xl shadow-lg" style="border:2px solid var(--accent)">
-                  <img id="qr-img" src="" alt="登录二维码" class="w-40 h-40 object-contain">
-                </div>
-                <p id="qr-status-label" class="text-xs font-bold animate-pulse text-center" style="color:var(--accent)">
-                  请使用知道智慧树 APP 或微信扫码
-                </p>
-                <button onclick="fetchQrCode()" class="text-xs underline font-semibold" style="color:var(--accent)">
-                  重新生成二维码
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Cookie Tab -->
-          <div id="tab-cookie" class="hidden space-y-3">
-            <div>
-              <label class="block text-xs font-semibold text-sub mb-1">浏览器 Cookie（支持 key=value 串或 JSON）</label>
-              <textarea id="cookie-input" rows="4" placeholder="粘贴 zhihuishu.com 的 CASLOGC 等 Cookie..."
-                class="ba-input w-full text-xs font-mono rounded-xl p-3"></textarea>
-            </div>
-            <button onclick="saveManualCookie()" class="ba-skew-btn ba-btn-gdd w-full py-2.5 text-xs font-bold">
-              <span>💾 保存并验证凭证</span>
-            </button>
-          </div>
+      <!-- Global Batch Speed & Controls -->
+      <div class="flex flex-wrap items-center gap-2.5">
+        <div class="flex items-center gap-2 ba-inner-box rounded-xl px-3 py-1.5">
+          <span class="text-xs font-semibold text-sub">倍速</span>
+          <select id="global-speed-select" class="text-xs font-bold bg-transparent text-main focus:outline-none cursor-pointer">
+            <option value="1.5" selected style="color:#0f172a">1.5x 安全上限</option>
+            <option value="1.25" style="color:#0f172a">1.25x 平稳</option>
+            <option value="1.0" style="color:#0f172a">1.0x 原速</option>
+          </select>
         </div>
-
-        <div class="mt-4 pt-3 flex items-center justify-between" style="border-top:1px solid var(--border-main)">
-          <span class="text-[11px] text-mute">持久化存储: cookies.json</span>
-          <button onclick="clearCookies()" class="text-xs font-bold" style="color:var(--momoi)">退出并清除凭证</button>
-        </div>
-      </div>
-
-      <!-- Real-time Mission Status Card -->
-      <div class="ba-glass rounded-2xl p-6 lg:col-span-2 flex flex-col justify-between">
-        <div>
-          <div class="flex flex-wrap items-center justify-between gap-2 mb-4 pb-2" style="border-bottom:1px solid var(--border-main)">
-            <h2 class="text-sm font-black text-main tracking-wider">🕹️ QUEST MONITOR // 实时挂机监控</h2>
-            <div class="flex items-center gap-2 ba-inner-box rounded-xl px-3 py-1">
-              <span class="text-xs font-semibold text-sub">倍速</span>
-              <select id="speed-select" class="text-xs font-bold bg-transparent text-main focus:outline-none cursor-pointer">
-                <option value="1.5" selected style="color:#0f172a">1.5x (安全推荐上限)</option>
-                <option value="1.25" style="color:#0f172a">1.25x (平稳)</option>
-                <option value="1.0" style="color:#0f172a">1.0x (原速)</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
-            <div class="ba-inner-box rounded-xl p-4">
-              <span class="text-[11px] font-bold text-mute block mb-1">CURRENT STAGE · 当前课程</span>
-              <div id="stat-course-name" class="text-base font-black text-main truncate">未开始</div>
-              <div id="stat-course-type" class="text-xs font-semibold mt-1" style="color:var(--accent)">--</div>
-            </div>
-            <div class="ba-inner-box rounded-xl p-4">
-              <span class="text-[11px] font-bold text-mute block mb-1">ACTIVE NODE · 当前小节</span>
-              <div id="stat-video-name" class="text-base font-black text-main truncate">--</div>
-              <div class="flex justify-between items-center mt-1 text-xs font-semibold text-sub">
-                <span id="stat-time" class="font-mono">--:-- / --:--</span>
-                <span id="stat-action" style="color:var(--accent)">--</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Progress Bar -->
-          <div class="space-y-2 mb-5">
-            <div class="flex justify-between text-xs">
-              <span class="font-semibold text-sub">当前小节通关进度</span>
-              <span id="stat-progress-num" class="font-black font-mono" style="color:var(--accent)">0.0%</span>
-            </div>
-            <div class="ba-progress-track w-full h-3.5">
-              <div id="stat-progress-bar" class="ba-progress-fill" style="width: 0%"></div>
-            </div>
-          </div>
-
-          <!-- Feature Badges -->
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center text-xs">
-            <div class="p-2 rounded-xl ba-inner-box">
-              <span class="font-black block" style="color:var(--accent)">🔒 动态 AES</span>
-              <span class="text-[10px] text-mute">WatchPoint 保真</span>
-            </div>
-            <div class="p-2 rounded-xl ba-inner-box">
-              <span class="font-black block" style="color:var(--momoi)">🤖 弹题自解</span>
-              <span class="text-[10px] text-mute">随堂弹窗自动提交</span>
-            </div>
-            <div class="p-2 rounded-xl ba-inner-box">
-              <span class="font-black block" style="color:var(--gold)">🛡️ 微休避检</span>
-              <span class="text-[10px] text-mute">随机拟人暂停</span>
-            </div>
-            <div class="p-2 rounded-xl ba-inner-box">
-              <span class="font-black block" style="color:var(--accent-2)">🚀 独立后台</span>
-              <span class="text-[10px] text-mute">关电脑不中断</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Control Buttons -->
-        <div class="mt-6 pt-4 flex flex-wrap gap-3 items-center justify-end" style="border-top:1px solid var(--border-main)">
-          <button id="btn-start" onclick="startTask()" class="ba-skew-btn ba-btn-gdd px-5 py-2.5 text-xs font-black">
-            <span>▶ 开始刷选中课程</span>
-          </button>
-          <button id="btn-pause" onclick="togglePause()" class="ba-skew-btn ba-btn-gold px-5 py-2.5 text-xs font-bold" disabled>
-            <span>⏸ 暂停</span>
-          </button>
-          <button id="btn-stop" onclick="stopTask()" class="ba-skew-btn ba-btn-momoi px-5 py-2.5 text-xs font-bold" disabled>
-            <span>⏹ 停止任务</span>
-          </button>
-        </div>
+        <button onclick="startAllAccounts()" class="ba-skew-btn ba-btn-gdd px-4 py-2 text-xs font-bold">
+          <span>🚀 全部同时开刷</span>
+        </button>
+        <button onclick="pauseAllAccounts()" class="ba-skew-btn ba-btn-gold px-3.5 py-2 text-xs font-bold">
+          <span>⏸ 全部暂停/恢复</span>
+        </button>
+        <button onclick="stopAllAccounts()" class="ba-skew-btn ba-btn-momoi px-3.5 py-2 text-xs font-bold">
+          <span>⏹ 全部停止</span>
+        </button>
       </div>
     </div>
 
-    <!-- Course List Section -->
-    <section class="ba-glass rounded-2xl p-6 space-y-4">
-      <div class="flex flex-wrap items-center justify-between gap-4 pb-2" style="border-bottom:1px solid var(--border-main)">
-        <div class="flex items-center gap-3">
+    <!-- Multi-Account Concurrent Pool Grid -->
+    <section class="space-y-3">
+      <div class="flex items-center justify-between px-1">
+        <div class="flex items-center gap-2">
+          <span class="w-1.5 h-5 rounded-full" style="background:linear-gradient(180deg,#10b981,#fb7185)"></span>
+          <h2 class="text-sm font-black tracking-wide text-main uppercase">CO-OP PARTY // 多账号并发小队</h2>
+        </div>
+        <span class="text-[11px] text-mute">点击任意账号卡片切换下方课程清单</span>
+      </div>
+
+      <div id="accounts-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div class="col-span-full ba-glass rounded-2xl p-10 text-center space-y-3">
+          <div class="text-3xl">🎮</div>
+          <div class="text-sm font-bold text-main">尚未编入智慧树账号</div>
+          <p class="text-xs text-sub">点击下方按钮通过扫码或 Cookie 添加多个智慧树账号，每个账号独立线程并发挂机。</p>
+          <button onclick="openAddAccountModal()" class="ba-skew-btn ba-btn-gdd px-5 py-2 text-xs font-bold">
+            <span>➕ 添加第一个智慧树账号</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Selected Account Course List Section -->
+    <section class="ba-glass rounded-2xl p-5 sm:p-6 space-y-4">
+      <div class="flex flex-wrap items-center justify-between gap-3 pb-3" style="border-bottom:1px solid var(--border-main)">
+        <div class="flex flex-wrap items-center gap-2.5">
           <span class="w-1.5 h-5 rounded-full" style="background:linear-gradient(180deg,var(--accent),var(--momoi))"></span>
-          <h2 class="text-sm font-black text-main tracking-wider">STAGE SELECT // 我的智慧树课程</h2>
-          <span id="course-count-badge" class="ba-skew-tag px-2.5 py-0.5 text-xs font-bold text-white" style="background:var(--accent)"><span>0 门课程</span></span>
+          <h2 class="text-sm font-black text-main tracking-wider">STAGE SELECT // 选中账号课程列表</h2>
+          <span id="active-account-pill" class="ba-skew-tag px-2.5 py-0.5 text-xs font-bold text-white" style="background:var(--accent)">
+            <span>未选中账号</span>
+          </span>
+          <span id="course-count-badge" class="text-xs font-bold px-2.5 py-0.5 rounded-full ba-inner-box text-sub">0 门课程</span>
         </div>
-        <div class="flex items-center gap-3">
+        <div class="flex flex-wrap items-center gap-2.5">
           <label class="flex items-center gap-1.5 text-xs font-semibold text-sub cursor-pointer">
             <input type="checkbox" id="select-all-courses" onchange="toggleSelectAllCourses(this.checked)" class="rounded accent-emerald-500">
             <span>全选</span>
           </label>
-          <button onclick="loadCourses()" class="ba-skew-btn ba-btn-ghost px-3 py-1.5 text-xs font-semibold">
+          <button onclick="startActiveSelectedCourses()" class="ba-skew-btn ba-btn-gdd px-3.5 py-1.5 text-xs font-bold">
+            <span>▶ 刷选中课程</span>
+          </button>
+          <button onclick="loadActiveAccountCourses()" class="ba-skew-btn ba-btn-ghost px-3 py-1.5 text-xs font-semibold">
             <span>🔄 刷新课程</span>
           </button>
         </div>
       </div>
 
       <div id="course-list-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <div class="col-span-full text-center py-12 text-mute text-xs">
-          请先扫码登录以加载当前学期课程列表...
+        <div class="col-span-full text-center py-10 text-mute text-xs">
+          选择上方账号卡片加载当前学期课程列表...
         </div>
       </div>
     </section>
 
     <!-- Live Terminal Log -->
-    <section class="ba-glass rounded-2xl p-6 space-y-3">
-      <div class="flex items-center justify-between pb-2" style="border-bottom:1px solid var(--border-main)">
-        <div class="flex items-center gap-2">
-          <span class="ba-live-dot"></span>
-          <h2 class="text-sm font-black text-main tracking-wider">GDD CONSOLE // 实时运行日志</h2>
+    <section class="ba-glass rounded-2xl p-5 sm:p-6 space-y-3">
+      <div class="flex flex-wrap items-center justify-between gap-3 pb-2" style="border-bottom:1px solid var(--border-main)">
+        <div class="flex flex-wrap items-center gap-3">
+          <div class="flex items-center gap-2">
+            <span class="ba-live-dot"></span>
+            <h2 class="text-sm font-black text-main tracking-wider">GDD CONSOLE // 实时运行日志</h2>
+          </div>
+          <div class="flex gap-1 ba-inner-box p-1 rounded-xl text-xs">
+            <button id="log-mode-all" onclick="setLogMode('all')" class="px-2.5 py-1 rounded-lg font-bold text-white transition" style="background:var(--accent)">
+              🌐 全部账号聚合
+            </button>
+            <button id="log-mode-single" onclick="setLogMode('single')" class="px-2.5 py-1 rounded-lg font-semibold text-sub transition">
+              👤 仅当前选中
+            </button>
+          </div>
         </div>
         <div class="flex items-center gap-3 text-xs">
           <label class="flex items-center gap-1.5 text-sub font-medium cursor-pointer">
@@ -523,10 +505,76 @@
       </div>
       <div id="terminal-body" class="rounded-xl p-4 font-mono text-xs leading-relaxed h-64 overflow-y-auto terminal-scroll space-y-1 text-emerald-100"
            style="background:var(--term-bg); border:1px solid var(--term-border)">
-        <div class="text-emerald-400/70">[GDD] 游戏开发部智慧树引擎已就绪...</div>
+        <div class="text-emerald-400/70">[GDD] 游戏开发部多账号智慧树引擎已就绪...</div>
       </div>
     </section>
   </main>
+
+  <!-- Add New Account Modal -->
+  <div id="add-account-modal" class="hidden fixed inset-0 z-50 bg-slate-950/65 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="ba-glass ba-modal-panel w-full max-w-md rounded-2xl overflow-hidden" style="background:var(--glass-strong); border-color:var(--border-strong)">
+      <div class="px-5 py-4 flex items-center justify-between" style="border-bottom:1px solid var(--border-main); background:var(--accent-soft)">
+        <div>
+          <h3 class="text-sm font-black text-main">➕ 招募 / 接入新智慧树账号</h3>
+          <p class="text-[11px] text-sub mt-0.5">新增账号完全独立隔离，不影响正在并发挂机的其他账号</p>
+        </div>
+        <button onclick="closeAddAccountModal()" class="w-8 h-8 rounded-lg flex items-center justify-center text-sub hover:text-main ba-inner-box font-bold">✕</button>
+      </div>
+
+      <div class="p-5 space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-sub mb-1">账号代号 / 备注（可选）</label>
+          <input id="new-account-remark" type="text" placeholder="例如：主号 / 舍友A / 小号"
+            class="ba-input w-full text-xs rounded-xl px-3 py-2.5">
+        </div>
+
+        <div class="flex gap-2 ba-inner-box p-1 rounded-xl">
+          <button id="tab-qr-btn" onclick="switchTab('qr')" class="flex-1 py-1.5 text-xs font-bold rounded-lg text-white shadow transition" style="background:var(--accent)">
+            📱 扫码一键登录
+          </button>
+          <button id="tab-cookie-btn" onclick="switchTab('cookie')" class="flex-1 py-1.5 text-xs font-semibold rounded-lg text-sub transition">
+            🍪 粘贴 Cookie
+          </button>
+        </div>
+
+        <!-- QR Tab -->
+        <div id="tab-qr" class="space-y-3">
+          <div class="flex flex-col items-center justify-center p-4 ba-inner-box rounded-xl min-h-[225px]">
+            <div id="qr-placeholder" class="text-center space-y-3">
+              <div class="w-14 h-14 mx-auto rounded-2xl flex items-center justify-center text-3xl" style="background:var(--accent-soft)">📱</div>
+              <p class="text-xs text-sub">使用知道智慧树 APP 或微信扫码，支持无限叠加多账号</p>
+              <button onclick="fetchQrCode()" class="ba-skew-btn ba-btn-gdd px-4 py-2 text-xs font-bold">
+                <span>生成智慧树登录二维码</span>
+              </button>
+            </div>
+            <div id="qr-display" class="hidden flex-col items-center space-y-2.5">
+              <div class="p-2.5 bg-white rounded-2xl shadow-lg" style="border:2px solid var(--accent)">
+                <img id="qr-img" src="" alt="登录二维码" class="w-40 h-40 object-contain">
+              </div>
+              <p id="qr-status-label" class="text-xs font-bold animate-pulse text-center" style="color:var(--accent)">
+                请使用知道智慧树 APP 或微信扫码
+              </p>
+              <button onclick="fetchQrCode()" class="text-xs underline font-semibold" style="color:var(--accent)">
+                重新生成二维码
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cookie Tab -->
+        <div id="tab-cookie" class="hidden space-y-3">
+          <div>
+            <label class="block text-xs font-semibold text-sub mb-1">浏览器 Cookie（需含 CASLOGC，支持字符串或 JSON）</label>
+            <textarea id="cookie-input" rows="4" placeholder="粘贴 zhihuishu.com 的 CASLOGC 等 Cookie..."
+              class="ba-input w-full text-xs font-mono rounded-xl p-3"></textarea>
+          </div>
+          <button onclick="saveManualCookie()" class="ba-skew-btn ba-btn-gdd w-full py-2.5 text-xs font-bold">
+            <span>💾 校验并编入多账号池</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Shared Study Assistant Modal -->
   <div id="assistant-modal" class="hidden fixed inset-0 z-50 bg-slate-950/65 backdrop-blur-md flex items-center justify-center p-4">
@@ -596,7 +644,7 @@
           </div>
           <div class="flex flex-col sm:flex-row gap-2 items-stretch sm:items-end">
             <div class="flex-1">
-              <label class="block text-[11px] font-semibold text-sub mb-1">API Key（留空保留原 Key，持久化在本地 data/）</label>
+              <label class="block text-[11px] font-semibold text-sub mb-1">API Key（留空保留原 Key，持久化在本地）</label>
               <input id="ai-key" type="password" placeholder="sk-..." class="ba-input w-full text-xs rounded-lg px-2.5 py-1.5">
             </div>
             <button type="button" onclick="saveAssistantConfig(false)" class="ba-skew-btn ba-btn-gdd px-4 py-1.5 text-xs font-bold">
@@ -654,7 +702,7 @@
           vy: -0.22 - Math.random() * 0.42,
           rot: Math.random() * Math.PI,
           vrot: (Math.random() - 0.5) * 0.02,
-          kind: i % 3, // 0: green pixel square, 1: momoi coral pixel square, 2: retro D-pad +
+          kind: i % 3,
           alpha: 0.16 + Math.random() * 0.24
         });
       }
@@ -727,7 +775,7 @@
       const cur = document.documentElement.getAttribute('data-theme') || 'midori';
       const next = cur === 'midori' ? 'momoi' : 'midori';
       applyTheme(next);
-      showToast(next === 'momoi' ? '切换至小桃·霓虹像素夜 (Momoi Arcade)' : '切换至小绿·翠绿电玩 (Midori Mint)', 'ok');
+      showToast(next === 'momoi' ? '切换至才羽桃井 · 菱形准星暗夜模式' : '切换至才羽绿 · 曲边筝形准星模式', 'ok');
     }
 
     function showToast(msg, type = 'info') {
@@ -742,16 +790,29 @@
       }, 3200);
     }
 
-    /* --- Zhihuishu Core Logic --- */
+    /* --- Multi-Account Zhihuishu Controller --- */
     let pollInterval = null;
     let qrPollInterval = null;
-    let coursesData = [];
+    let activeAccountId = '';
+    let accountsList = [];
+    let logMode = 'all';
 
     function escapeHtml(text) {
       return String(text || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     }
     function escapeAttr(text) {
       return escapeHtml(text).replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
+
+    function openAddAccountModal() {
+      document.getElementById('add-account-modal').classList.remove('hidden');
+      document.getElementById('new-account-remark').value = '';
+      document.getElementById('cookie-input').value = '';
+      switchTab('qr');
+    }
+    function closeAddAccountModal() {
+      if (qrPollInterval) { clearInterval(qrPollInterval); qrPollInterval = null; }
+      document.getElementById('add-account-modal').classList.add('hidden');
     }
 
     function switchTab(tab) {
@@ -794,20 +855,26 @@
       if (qrPollInterval) clearInterval(qrPollInterval);
       qrPollInterval = setInterval(async () => {
         try {
-          const res = await fetch(`/api/qr/poll?token=${encodeURIComponent(token)}`);
+          const remark = document.getElementById('new-account-remark').value.trim();
+          const res = await fetch(`/api/qr/poll?token=${encodeURIComponent(token)}&remark=${encodeURIComponent(remark)}`);
           const data = await res.json();
           const label = document.getElementById('qr-status-label');
           if (data.status === 'waiting') label.innerText = '等待手机扫码...';
           else if (data.status === 'scanned') { label.innerText = '📱 已扫码！请在手机端确认登录'; label.style.color = 'var(--gold)'; }
           else if (data.status === 'success') {
-            clearInterval(qrPollInterval);
-            label.innerText = '🎉 登录成功！正在加载课程...';
+            clearInterval(qrPollInterval); qrPollInterval = null;
+            label.innerText = '🎉 ' + (data.msg || '登录成功！');
             label.style.color = 'var(--accent)';
-            showToast('智慧树扫码登录成功！准备通关~', 'ok');
-            setTimeout(() => { loadCourses(); refreshStatus(); }, 800);
-          } else if (data.status === 'expired' || data.status === 'canceled') {
-            clearInterval(qrPollInterval);
-            label.innerText = data.msg; label.style.color = 'var(--momoi)';
+            if (data.account_id) activeAccountId = data.account_id;
+            showToast(data.msg || '智慧树扫码登录成功！', 'ok');
+            setTimeout(async () => {
+              closeAddAccountModal();
+              await refreshStatus();
+              await loadActiveAccountCourses();
+            }, 600);
+          } else if (data.status === 'expired' || data.status === 'canceled' || data.status === 'error') {
+            clearInterval(qrPollInterval); qrPollInterval = null;
+            label.innerText = data.msg || '二维码已失效'; label.style.color = 'var(--momoi)';
           }
         } catch (e) {}
       }, 1500);
@@ -815,37 +882,140 @@
 
     async function saveManualCookie() {
       const val = document.getElementById('cookie-input').value.trim();
+      const remark = document.getElementById('new-account-remark').value.trim();
       if (!val) return showToast('请输入有效的 Cookie 内容', 'warn');
       try {
         const res = await fetch('/api/cookie', {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ cookie: val })
+          body: JSON.stringify({ cookie: val, remark })
         });
         const data = await res.json();
-        if (data.code === 200) { showToast('Cookie 导入成功！', 'ok'); loadCourses(); refreshStatus(); }
-        else showToast('导入失败: ' + data.msg, 'err');
+        if (data.code === 200 || data.ok) {
+          if (data.account_id) activeAccountId = data.account_id;
+          closeAddAccountModal();
+          showToast(data.msg || 'Cookie 导入成功！', 'ok');
+          await refreshStatus();
+          await loadActiveAccountCourses();
+        } else showToast('导入失败: ' + (data.msg || '无效凭证'), 'err');
       } catch (e) { showToast('请求失败: ' + e, 'err'); }
     }
 
-    async function clearCookies() {
-      if (!confirm('确定要清除已保存的凭证并退出登录吗？')) return;
-      await fetch('/api/logout', { method: 'POST' });
-      location.reload();
+    function selectAccount(aid) {
+      if (activeAccountId !== aid) {
+        activeAccountId = aid;
+        renderAccountCards();
+        refreshStatus();
+        loadActiveAccountCourses();
+      }
     }
 
-    async function loadCourses() {
+    function renderAccountCards() {
+      const grid = document.getElementById('accounts-grid');
+      if (!accountsList || accountsList.length === 0) {
+        grid.innerHTML = `
+          <div class="col-span-full ba-glass rounded-2xl p-10 text-center space-y-3">
+            <div class="text-3xl">🎮</div>
+            <div class="text-sm font-bold text-main">尚未编入智慧树账号</div>
+            <p class="text-xs text-sub">点击下方按钮通过扫码或 Cookie 添加多个智慧树账号，所有账号独立线程并发挂机。</p>
+            <button onclick="openAddAccountModal()" class="ba-skew-btn ba-btn-gdd px-5 py-2 text-xs font-bold">
+              <span>➕ 扫码 / Cookie 添加账号</span>
+            </button>
+          </div>`;
+        return;
+      }
+
+      grid.innerHTML = accountsList.map((acc, idx) => {
+        const isActive = acc.account_id === activeAccountId;
+        const isRunning = acc.status === 'running';
+        const isPaused = acc.status === 'paused';
+        const pct = (acc.progress || 0).toFixed(1);
+
+        let statusTag = `<span class="ba-skew-tag px-2 py-0.5 text-[10px] font-bold ba-inner-box text-sub"><span>STANDBY · 待命</span></span>`;
+        if (!acc.logged_in) {
+          statusTag = `<span class="ba-skew-tag px-2 py-0.5 text-[10px] font-bold text-white" style="background:var(--momoi)"><span>EXPIRED · 失效</span></span>`;
+        } else if (isRunning) {
+          statusTag = `<span class="ba-skew-tag px-2 py-0.5 text-[10px] font-bold text-white animate-pulse" style="background:linear-gradient(135deg,#10b981,#06b6d4)"><span>⚡ PLAYING · 并发中</span></span>`;
+        } else if (isPaused) {
+          statusTag = `<span class="ba-skew-tag px-2 py-0.5 text-[10px] font-bold text-slate-900" style="background:var(--gold)"><span>⏸ PAUSED · 暂停</span></span>`;
+        } else if (acc.status === 'error') {
+          statusTag = `<span class="ba-skew-tag px-2 py-0.5 text-[10px] font-bold text-white" style="background:var(--momoi)"><span>❌ ERROR</span></span>`;
+        }
+
+        const courseTitle = acc.current_course ? (acc.current_course.name || acc.current_course.id) : '待指派课程';
+        const videoTitle = acc.current_video ? (acc.current_video.name || acc.current_video.id) : (acc.action || '等待指令');
+
+        const ctrlBtn = isRunning
+          ? `<button onclick="event.stopPropagation(); pauseAccount('${escapeAttr(acc.account_id)}')" class="ba-skew-btn ba-btn-gold px-2.5 py-1 text-[11px] font-bold"><span>⏸ 暂停</span></button>
+             <button onclick="event.stopPropagation(); stopAccount('${escapeAttr(acc.account_id)}')" class="ba-skew-btn ba-btn-momoi px-2.5 py-1 text-[11px] font-bold"><span>⏹ 停止</span></button>`
+          : isPaused
+          ? `<button onclick="event.stopPropagation(); pauseAccount('${escapeAttr(acc.account_id)}')" class="ba-skew-btn ba-btn-gdd px-2.5 py-1 text-[11px] font-bold"><span>▶ 继续</span></button>
+             <button onclick="event.stopPropagation(); stopAccount('${escapeAttr(acc.account_id)}')" class="ba-skew-btn ba-btn-momoi px-2.5 py-1 text-[11px] font-bold"><span>⏹ 停止</span></button>`
+          : `<button onclick="event.stopPropagation(); startAccountAll('${escapeAttr(acc.account_id)}')" class="ba-skew-btn ba-btn-gdd px-3 py-1 text-[11px] font-bold"><span>▶ 一键开刷</span></button>`;
+
+        return `
+          <div onclick="selectAccount('${escapeAttr(acc.account_id)}')" class="ba-card rounded-2xl p-4 pl-5 cursor-pointer space-y-3 ${isActive ? 'is-active' : ''}">
+            <div class="flex items-start justify-between gap-2">
+              <div class="overflow-hidden">
+                <div class="flex items-center gap-1.5">
+                  <span class="text-[10px] font-black px-1.5 py-0.5 rounded" style="background:var(--accent-soft); color:var(--accent)">P${idx + 1}</span>
+                  <span class="text-sm font-black text-main truncate">${escapeHtml(acc.display_label)}</span>
+                </div>
+                <div class="text-[11px] text-mute font-mono truncate mt-0.5">UUID: ${escapeHtml(acc.account_id.slice(0, 12))} · ${acc.speed}x</div>
+              </div>
+              <div class="flex-shrink-0">${statusTag}</div>
+            </div>
+
+            <div class="ba-inner-box rounded-xl p-3 space-y-1.5">
+              <div class="text-xs font-bold text-main truncate" title="${escapeAttr(courseTitle)}">🎮 ${escapeHtml(courseTitle)}</div>
+              <div class="text-[11px] text-sub truncate" title="${escapeAttr(videoTitle)}">${escapeHtml(videoTitle)}</div>
+              <div class="flex justify-between text-[10px] font-mono text-mute pt-1">
+                <span>${escapeHtml(acc.time_str || '--:-- / --:--')}</span>
+                <span class="font-black" style="color:var(--accent)">${pct}%</span>
+              </div>
+              <div class="ba-progress-track h-2.5 w-full">
+                <div class="ba-progress-fill ${isRunning ? 'is-running' : ''}" style="width: ${pct}%"></div>
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between text-[11px] font-semibold text-sub">
+              <span>✅ 已完播 <b style="color:var(--accent)">${acc.completed_videos || 0}</b> 节 · 🔒 AES + 弹题</span>
+              ${isActive ? '<span class="text-[10px] font-black" style="color:var(--accent)">● 当前查看</span>' : ''}
+            </div>
+
+            <div class="pt-2.5 flex flex-wrap items-center justify-between gap-2" style="border-top:1px solid var(--border-main)">
+              <div class="flex items-center gap-1.5">${ctrlBtn}</div>
+              <div class="flex items-center gap-1.5">
+                <button onclick="event.stopPropagation(); editRemark('${escapeAttr(acc.account_id)}', '${escapeAttr(acc.remark || '')}')" class="ba-skew-btn ba-btn-ghost px-2 py-1 text-[11px] font-semibold">
+                  <span>✏️ 备注</span>
+                </button>
+                <button onclick="event.stopPropagation(); deleteAccount('${escapeAttr(acc.account_id)}', '${escapeAttr(acc.display_label)}')" class="ba-skew-btn ba-btn-ghost px-2 py-1 text-[11px] font-semibold" style="color:var(--momoi)">
+                  <span>🗑</span>
+                </button>
+              </div>
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    async function loadActiveAccountCourses() {
       const container = document.getElementById('course-list-container');
       const badge = document.getElementById('course-count-badge');
-      container.innerHTML = '<div class="col-span-full text-center py-10 text-sub text-xs">正在从智慧树云端加载课程...</div>';
+      if (!activeAccountId) {
+        badge.innerText = '0 门课程';
+        container.innerHTML = '<div class="col-span-full text-center py-10 text-mute text-xs">请先添加或选中一个智慧树账号...</div>';
+        return;
+      }
+      container.innerHTML = '<div class="col-span-full text-center py-10 text-sub text-xs">正在从智慧树云端加载该账号课程...</div>';
       try {
-        const res = await fetch('/api/courses');
+        const res = await fetch(`/api/courses?account_id=${encodeURIComponent(activeAccountId)}`);
         const data = await res.json();
         if (data.code === 200) {
-          coursesData = data.courses || [];
-          badge.innerHTML = `<span>${coursesData.length} 门课程</span>`;
-          renderCourses(coursesData);
+          const courses = data.courses || [];
+          badge.innerText = `${courses.length} 门课程`;
+          renderCourses(courses);
         } else {
-          container.innerHTML = `<div class="col-span-full text-center py-10 text-xs font-semibold" style="color:var(--momoi)">${escapeHtml(data.msg || '请先扫码登录')}</div>`;
+          badge.innerText = '0 门课程';
+          container.innerHTML = `<div class="col-span-full text-center py-10 text-xs font-semibold" style="color:var(--momoi)">${escapeHtml(data.msg || '获取课程失败')}</div>`;
         }
       } catch (e) {
         container.innerHTML = `<div class="col-span-full text-center py-10 text-xs" style="color:var(--momoi)">请求异常: ${escapeHtml(e)}</div>`;
@@ -903,8 +1073,7 @@
               </div>
               <button onclick="startSingleCourse('${escapeAttr(c.id)}')" class="ba-skew-btn ba-btn-gdd px-3 py-1 text-xs font-bold"><span>▶ 刷这门课</span></button>
             </div>
-          </div>
-        `;
+          </div>`;
       }).join('');
     }
 
@@ -912,103 +1081,170 @@
       document.querySelectorAll('.course-checkbox').forEach(cb => cb.checked = checked);
     }
 
-    async function startTask() {
-      const selected = Array.from(document.querySelectorAll('.course-checkbox:checked')).map(cb => cb.value);
-      if (selected.length === 0 && !confirm('当前未勾选特定课程，是否自动顺序刷全部未完成课程？')) return;
-      const speed = parseFloat(document.getElementById('speed-select').value) || 1.5;
-      const res = await fetch('/api/start', {
+    async function startAllAccounts() {
+      const speed = parseFloat(document.getElementById('global-speed-select').value) || 1.5;
+      const res = await fetch('/api/start_all', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ course_ids: selected, speed })
+        body: JSON.stringify({ speed })
       });
       const data = await res.json();
-      showToast(data.msg || (data.code === 200 ? '已启动任务！' : '启动失败'), data.code === 200 ? 'ok' : 'err');
+      showToast(data.msg || '已启动全部账号', 'ok');
+      refreshStatus();
+    }
+
+    async function pauseAllAccounts() {
+      const res = await fetch('/api/pause_all', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'toggle' })
+      });
+      const data = await res.json();
+      showToast(data.msg || '已切换全部暂停状态', 'warn');
+      refreshStatus();
+    }
+
+    async function stopAllAccounts() {
+      if (!confirm('确定要停止所有智慧树账号的后台挂机任务吗？')) return;
+      const res = await fetch('/api/stop_all', { method: 'POST' });
+      const data = await res.json();
+      showToast(data.msg || '已发送全部停止指令', 'warn');
+      refreshStatus();
+    }
+
+    async function startAccountAll(aid) {
+      const speed = parseFloat(document.getElementById('global-speed-select').value) || 1.5;
+      const res = await fetch('/api/start', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ account_id: aid, course_ids: [], speed })
+      });
+      const data = await res.json();
+      showToast(data.msg || '已启动', data.ok ? 'ok' : 'err');
+      refreshStatus();
+    }
+
+    async function startActiveSelectedCourses() {
+      if (!activeAccountId) return showToast('请先选中一个账号', 'warn');
+      const selected = Array.from(document.querySelectorAll('.course-checkbox:checked')).map(cb => cb.value);
+      if (selected.length === 0 && !confirm('当前未勾选特定课程，是否自动顺序刷全部未完成课程？')) return;
+      const speed = parseFloat(document.getElementById('global-speed-select').value) || 1.5;
+      const res = await fetch('/api/start', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ account_id: activeAccountId, course_ids: selected, speed })
+      });
+      const data = await res.json();
+      showToast(data.msg || '已启动任务', data.ok ? 'ok' : 'err');
       refreshStatus();
     }
 
     async function startSingleCourse(id) {
-      const speed = parseFloat(document.getElementById('speed-select').value) || 1.5;
+      if (!activeAccountId) return showToast('请先选中一个账号', 'warn');
+      const speed = parseFloat(document.getElementById('global-speed-select').value) || 1.5;
       const res = await fetch('/api/start', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ course_ids: [id], speed })
+        body: JSON.stringify({ account_id: activeAccountId, course_ids: [id], speed })
       });
       const data = await res.json();
-      showToast(data.msg || '已启动单门课程', data.code === 200 ? 'ok' : 'err');
+      showToast(data.msg || '已启动单门课程', data.ok ? 'ok' : 'err');
       refreshStatus();
     }
 
-    async function togglePause() {
-      const res = await fetch('/api/pause', { method: 'POST' });
+    async function pauseAccount(aid) {
+      const res = await fetch('/api/pause', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ account_id: aid })
+      });
       const data = await res.json();
       showToast(data.msg || '已切换状态', 'warn');
       refreshStatus();
     }
 
-    async function stopTask() {
-      if (!confirm('确定要停止当前刷课任务吗？')) return;
-      await fetch('/api/stop', { method: 'POST' });
+    async function stopAccount(aid) {
+      if (!confirm('确定要停止该账号的挂机任务吗？')) return;
+      await fetch('/api/stop', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ account_id: aid })
+      });
       showToast('已发送停止指令', 'warn');
+      refreshStatus();
+    }
+
+    async function editRemark(aid, oldVal) {
+      const val = prompt('请输入该账号的新备注名（留空则清除备注）：', oldVal);
+      if (val === null) return;
+      await fetch(`/api/accounts/${encodeURIComponent(aid)}/remark`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ remark: val })
+      });
+      showToast('账号备注已更新', 'ok');
+      refreshStatus();
+    }
+
+    async function deleteAccount(aid, label) {
+      if (!confirm(`确定移除账号【${label}】吗？若正在运行会自动停止。`)) return;
+      await fetch(`/api/accounts/${encodeURIComponent(aid)}/delete`, { method: 'POST' });
+      if (activeAccountId === aid) activeAccountId = '';
+      showToast(`已移除账号 ${label}`, 'warn');
+      await refreshStatus();
+      await loadActiveAccountCourses();
+    }
+
+    function setLogMode(mode) {
+      logMode = mode === 'single' ? 'single' : 'all';
+      const bAll = document.getElementById('log-mode-all');
+      const bSingle = document.getElementById('log-mode-single');
+      if (logMode === 'all') {
+        bAll.style.background = 'var(--accent)'; bAll.className = 'px-2.5 py-1 rounded-lg font-bold text-white transition';
+        bSingle.style.background = 'transparent'; bSingle.className = 'px-2.5 py-1 rounded-lg font-semibold text-sub transition';
+      } else {
+        bSingle.style.background = 'var(--accent)'; bSingle.className = 'px-2.5 py-1 rounded-lg font-bold text-white transition';
+        bAll.style.background = 'transparent'; bAll.className = 'px-2.5 py-1 rounded-lg font-semibold text-sub transition';
+      }
       refreshStatus();
     }
 
     async function refreshStatus() {
       try {
-        const res = await fetch('/api/status');
+        const qs = activeAccountId ? `?account_id=${encodeURIComponent(activeAccountId)}` : '';
+        const res = await fetch('/api/status' + qs);
         const data = await res.json();
 
-        const userStatus = document.getElementById('user-status-text');
-        if (data.logged_in) { userStatus.innerText = '已认证 ✓'; userStatus.style.color = 'var(--accent)'; }
-        else { userStatus.innerText = '未登录'; userStatus.style.color = 'var(--text-muted)'; }
+        accountsList = data.accounts || [];
+        const needInitialLoad = !activeAccountId && accountsList.length > 0;
+        if ((!activeAccountId || !accountsList.some(a => a.account_id === activeAccountId)) && accountsList.length > 0) {
+          activeAccountId = accountsList[0].account_id;
+        }
 
-        const taskBadge = document.getElementById('task-badge');
+        const total = data.total_accounts || 0;
+        const running = data.running_count || 0;
+        document.getElementById('global-summary-badge').innerHTML =
+          `<span class="ba-live-dot"></span><span>已接入 ${total} 个账号 · ${running} 个并发中</span>`;
+
+        const activeObj = accountsList.find(a => a.account_id === activeAccountId);
+        document.getElementById('active-account-pill').innerHTML = `<span>${escapeHtml(activeObj ? activeObj.display_label : '未选中账号')}</span>`;
+
         const speech = document.getElementById('gdd-speech');
-        const bar = document.getElementById('stat-progress-bar');
-        const btnStart = document.getElementById('btn-start');
-        const btnPause = document.getElementById('btn-pause');
-        const btnStop = document.getElementById('btn-stop');
-
-        if (data.status === 'running') {
-          taskBadge.innerHTML = '<span>⚡ PLAYING · 挂机中</span>';
-          taskBadge.style.background = 'linear-gradient(135deg,#10b981,#06b6d4)'; taskBadge.style.color = '#fff';
-          bar.classList.add('is-running');
-          speech.innerText = `小桃：正在冲关中！${data.action || '视频学习中'}（当前进度 ${(data.progress || 0).toFixed(1)}%）~ 小绿：心跳加密与弹题都很稳定哦。`;
-          btnStart.disabled = true; btnPause.disabled = false; btnPause.innerHTML = '<span>⏸ 暂停</span>'; btnStop.disabled = false;
-        } else if (data.status === 'paused') {
-          taskBadge.innerHTML = '<span>⏸ PAUSED · 已暂停</span>';
-          taskBadge.style.background = 'var(--gold)'; taskBadge.style.color = '#1e293b';
-          bar.classList.remove('is-running');
-          speech.innerText = `小绿：已按下 Pause 键，休息好了随时点「继续」接着推关哦！`;
-          btnStart.disabled = true; btnPause.disabled = false; btnPause.innerHTML = '<span>▶ 继续</span>'; btnStop.disabled = false;
+        if (total === 0) {
+          speech.innerText = '小绿：老师！智慧树多账号联机引擎已就绪，点击「➕ 添加新账号」扫码即可加入队伍~ 小桃：冲呀冲呀！';
+        } else if (running > 0) {
+          const doneSum = accountsList.reduce((acc, a) => acc + (a.completed_videos || 0), 0);
+          speech.innerText = `小桃：正在联机冲关中！当前 ${running}/${total} 个账号并发挂机，已完播 ${doneSum} 节！小绿：AES 心跳与弹题全部正常。`;
         } else {
-          taskBadge.innerHTML = data.status === 'error' ? '<span>❌ ERROR</span>' : '<span>STANDBY · 待命中</span>';
-          taskBadge.style.background = data.status === 'error' ? 'var(--momoi)' : 'var(--card-inner)';
-          taskBadge.style.color = data.status === 'error' ? '#fff' : 'var(--text-secondary)';
-          bar.classList.remove('is-running');
-          speech.innerText = data.logged_in
-            ? `小绿：账号已经登录就绪啦！选好课程按「开始刷选中课程」就能挂机推进度~`
-            : `小绿：老师！智慧树副本引擎已装载完毕，扫码登录就能自动挂机通关啦~ 小桃：冲呀冲呀！`;
-          btnStart.disabled = false; btnPause.disabled = true; btnPause.innerHTML = '<span>⏸ 暂停</span>'; btnStop.disabled = true;
+          speech.innerText = `小绿：当前已编入 ${total} 个智慧树账号，全部待命中！点击「全部同时开刷」就能多开通关哦~`;
         }
 
-        if (data.current_course) {
-          document.getElementById('stat-course-name').innerText = data.current_course.name || data.current_course.id;
-          document.getElementById('stat-course-type').innerText = data.current_course.type === 'zhidao' ? '共享学分课' : '校内学分课';
-        }
-        if (data.current_video) document.getElementById('stat-video-name').innerText = data.current_video.name || data.current_video.id;
-        document.getElementById('stat-time').innerText = data.time_str || '--:-- / --:--';
-        document.getElementById('stat-action').innerText = data.action || '--';
+        renderAccountCards();
+        if (needInitialLoad) loadActiveAccountCourses();
 
-        const pct = (data.progress || 0).toFixed(1);
-        document.getElementById('stat-progress-num').innerText = pct + '%';
-        bar.style.width = pct + '%';
-
+        const logs = logMode === 'single'
+          ? (data.active_account ? (data.active_account.logs || []) : [])
+          : (data.global_logs || []);
         const term = document.getElementById('terminal-body');
-        if (data.logs && data.logs.length > 0) {
-          term.innerHTML = data.logs.map(l => {
+        if (logs.length > 0) {
+          term.innerHTML = logs.map(l => {
             let color = 'text-emerald-200';
             if (l.level === 'WARNING') color = 'text-amber-300';
             if (l.level === 'ERROR') color = 'text-rose-400 font-bold';
-            if (l.level === 'DEBUG') color = 'text-slate-500';
-            return `<div class="flex items-start gap-2 ${color}"><span class="text-slate-500 shrink-0">[${l.time}]</span><span>${escapeHtml(l.msg)}</span></div>`;
+            const tag = l.account ? `<span class="text-cyan-400 shrink-0 font-bold">[${escapeHtml(l.account)}]</span>` : '';
+            return `<div class="flex items-start gap-2 ${color}"><span class="text-slate-500 shrink-0">[${l.time}]</span>${tag}<span>${escapeHtml(l.msg)}</span></div>`;
           }).join('');
           if (document.getElementById('auto-scroll-toggle').checked) term.scrollTop = term.scrollHeight;
         }
@@ -1018,7 +1254,7 @@
     function clearTerminalView() {
       document.getElementById('terminal-body').innerHTML = '<div class="text-slate-500">[CLEARED] 终端显示已清空</div>';
     }
-    function refreshAll() { refreshStatus(); loadCourses(); }
+    function refreshAll() { refreshStatus(); loadActiveAccountCourses(); }
 
     /* --- Shared Study Assistant --- */
     const AI_PRESETS = {
@@ -1149,17 +1385,20 @@
       navigator.clipboard.writeText(lastAnalysisText).then(() => showToast('已复制到剪贴板！', 'ok'));
     }
 
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeAssistant(); });
-    window.onload = () => {
-      applyTheme(localStorage.getItem('ba_zhs_theme') || 'midori');
-      refreshAll();
-      pollInterval = setInterval(refreshStatus, 1500);
-    };
-  
     function openPlatform(port) {
       const url = `${window.location.protocol}//${window.location.hostname}:${port}`;
       window.open(url, '_blank', 'noopener');
     }
+
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') { closeAssistant(); closeAddAccountModal(); }
+    });
+
+    window.onload = async () => {
+      applyTheme(localStorage.getItem('ba_zhs_theme') || 'midori');
+      await refreshStatus();
+      pollInterval = setInterval(refreshStatus, 1800);
+    };
   </script>
 </body>
 </html>

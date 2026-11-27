@@ -96,7 +96,7 @@ class SchaleDesktopApp:
         self._make_platform_card(
             cards_frame,
             col=1,
-            title="UOOC 优课在线",
+            title="UOOC 优课在线 (多账号)",
             character="圣园未花 · Mika",
             accent="#ec4899",
             port_var=self.uooc_port_var,
@@ -105,7 +105,7 @@ class SchaleDesktopApp:
         self._make_platform_card(
             cards_frame,
             col=2,
-            title="知道智慧树",
+            title="知道智慧树 (多账号)",
             character="才羽绿 & 才羽桃井",
             accent="#10b981",
             port_var=self.zhs_port_var,

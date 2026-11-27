@@ -8,7 +8,7 @@ from typing import Any, Dict, List, Optional
 
 from flask import Flask, jsonify, render_template, request
 
-from core.paths import get_data_dir, get_template_dir
+from core.paths import get_data_dir, get_static_dir, get_template_dir
 from core.study_assistant import ask_assistant, get_public_ai_config, save_ai_config
 from platforms.cx.cx_engine import ChaoxingClient
 
@@ -20,7 +20,7 @@ def _format_mmss(sec: float) -> str:
 
 
 def create_app() -> Flask:
-    app = Flask("cx_console", template_folder=get_template_dir("cx"))
+    app = Flask("cx_console", template_folder=get_template_dir("cx"), static_folder=get_static_dir("cx"))
     app.config["TEMPLATES_AUTO_RELOAD"] = True
 
     accounts_file = str(get_data_dir() / "cx_accounts.json")

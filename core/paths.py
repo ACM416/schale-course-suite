@@ -30,6 +30,10 @@ def get_template_dir(platform_name: str) -> str:
     return str(get_bundle_dir() / "platforms" / platform_name / "templates")
 
 
+def get_static_dir(platform_name: str) -> str:
+    return str(get_bundle_dir() / "platforms" / platform_name / "static")
+
+
 def get_port(env_name: str, default_port: int) -> int:
     try:
         return int(os.environ.get(env_name, default_port))

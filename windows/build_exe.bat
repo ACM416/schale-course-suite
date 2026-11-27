@@ -17,8 +17,11 @@ echo [3/3] Packaging standalone SCHALE-Course-Suite.exe ...
     --noconfirm --clean --onefile --windowed ^
     --name "SCHALE-Course-Suite" ^
     --add-data "platforms\uooc\templates;platforms\uooc\templates" ^
+    --add-data "platforms\uooc\static;platforms\uooc\static" ^
     --add-data "platforms\zhs\templates;platforms\zhs\templates" ^
+    --add-data "platforms\zhs\static;platforms\zhs\static" ^
     --add-data "platforms\cx\templates;platforms\cx\templates" ^
+    --add-data "platforms\cx\static;platforms\cx\static" ^
     --paths "platforms\zhs" ^
     --hidden-import "platforms.uooc.uooc_app" ^
     --hidden-import "platforms.zhs.zhs_app" ^

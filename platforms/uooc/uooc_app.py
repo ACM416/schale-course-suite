@@ -9,7 +9,7 @@ from typing import Any, Dict, List, Optional
 from flask import Flask, jsonify, render_template, request
 
 try:
-    from core.paths import get_data_dir, get_template_dir
+    from core.paths import get_data_dir, get_static_dir, get_template_dir
     from core.study_assistant import ask_assistant, get_public_ai_config, save_ai_config
     from platforms.uooc.uooc_engine import UoocClient
     from platforms.uooc.uooc_runner import TaskManager
@@ -25,6 +25,9 @@ except ImportError:
     def get_template_dir(_name: str) -> str:
         return os.path.join(os.path.dirname(os.path.abspath(__file__)), "templates")
 
+    def get_static_dir(_name: str) -> str:
+        return os.path.join(os.path.dirname(os.path.abspath(__file__)), "static")
+
 
 def _format_mmss(sec: float) -> str:
     s = max(0, int(sec))
@@ -32,9 +35,10 @@ def _format_mmss(sec: float) -> str:
     return f"{m:02d}:{r:02d}"
 
 
-def create_app(data_dir: Optional[str] = None, template_dir: Optional[str] = None) -> Flask:
+def create_app(data_dir: Optional[str] = None, template_dir: Optional[str] = None, static_dir: Optional[str] = None) -> Flask:
     tpl_folder = template_dir or get_template_dir("uooc")
-    app = Flask("uooc_console", template_folder=tpl_folder)
+    st_folder = static_dir or get_static_dir("uooc")
+    app = Flask("uooc_console", template_folder=tpl_folder, static_folder=st_folder)
     app.config["TEMPLATES_AUTO_RELOAD"] = True
 
     base_dir = data_dir or str(get_data_dir())

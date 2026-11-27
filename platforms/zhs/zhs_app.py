@@ -15,7 +15,7 @@ import requests
 from flask import Flask, jsonify, render_template, request
 
 try:
-    from core.paths import get_bundle_dir, get_data_dir, get_template_dir
+    from core.paths import get_bundle_dir, get_data_dir, get_static_dir, get_template_dir
     from core.study_assistant import ask_assistant, get_public_ai_config, save_ai_config
     ZHS_DIR = str(get_bundle_dir() / "platforms" / "zhs")
 except ImportError:
@@ -28,6 +28,9 @@ except ImportError:
 
     def get_template_dir(_name: str) -> str:
         return os.path.join(ZHS_DIR, "templates")
+
+    def get_static_dir(_name: str) -> str:
+        return os.path.join(ZHS_DIR, "static")
 
 if ZHS_DIR not in sys.path:
     sys.path.insert(0, ZHS_DIR)
@@ -167,11 +170,12 @@ def _serialize_cookies(cookies_obj) -> List[Dict[str, Any]]:
     return cookie_jar_to_list(cookies_obj)
 
 
-def create_app(data_dir: Optional[str] = None, template_dir: Optional[str] = None) -> Flask:
+def create_app(data_dir: Optional[str] = None, template_dir: Optional[str] = None, static_dir: Optional[str] = None) -> Flask:
     _install_thread_safe_hooks()
 
     tpl_folder = template_dir or get_template_dir("zhs")
-    app = Flask("zhs_console", template_folder=tpl_folder)
+    st_folder = static_dir or get_static_dir("zhs")
+    app = Flask("zhs_console", template_folder=tpl_folder, static_folder=st_folder)
     app.config["TEMPLATES_AUTO_RELOAD"] = True
 
     base_dir = data_dir or str(get_data_dir())
